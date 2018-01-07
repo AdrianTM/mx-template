@@ -31,6 +31,7 @@
 
 #include <QDebug>
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MainWindow)
@@ -60,16 +61,15 @@ void MainWindow::setup()
 // cleanup environment when window is closed
 void MainWindow::cleanup()
 {
-    if(!cmd->terminate()) {
-        cmd->kill();
-    }
+
 }
 
 
 // Get version of the program
 QString MainWindow::getVersion(QString name)
 {
-    return cmd->getOutput("dpkg -l "+ name + "| awk 'NR==6 {print $3}'");
+    Cmd cmd;
+    return cmd.getOutput("dpkg -l "+ name + "| awk 'NR==6 {print $3}'");
 }
 
 void MainWindow::cmdStart()
@@ -82,12 +82,12 @@ void MainWindow::cmdDone()
 {
     ui->progressBar->setValue(ui->progressBar->maximum());
     setCursor(QCursor(Qt::ArrowCursor));
-    cmd->disconnect();
 }
 
 // set proc and timer connections
 void MainWindow::setConnections()
 {
+    cmd->disconnect();
     connect(cmd, &Cmd::outputAvailable, this, &MainWindow::updateOutput);
     connect(cmd, &Cmd::runTime, this, &MainWindow::tock);  // processes runtime emited by Cmd to be used by a progress bar
     connect(cmd, &Cmd::started, this, &MainWindow::cmdStart);
@@ -101,12 +101,10 @@ void MainWindow::updateOutput(const QString &output)
     sb->setValue(sb->maximum());
 }
 
-void MainWindow::tock(int counter, int duration) // processes tick emited by Cmd to be used by a progress bar
+void MainWindow::progress(int counter, int duration) // processes tick emited by Cmd to be used by a progress bar
 {
-    int max_value;
-    max_value = (duration != 0) ? duration : 10;
-    ui->progressBar->setMaximum(max_value);
-    ui->progressBar->setValue(counter % (max_value + 1));
+    ui->progressBar->setMaximum(duration);
+    ui->progressBar->setValue(counter % (duration + 1));
 }
 
 // Next button clicked
@@ -117,6 +115,7 @@ void MainWindow::on_buttonNext_clicked()
         ui->buttonBack->setHidden(false);
         ui->buttonBack->setEnabled(true);
         ui->buttonNext->setEnabled(false);
+        ui->outputLabel->clear();
         ui->stackedWidget->setCurrentWidget(ui->outputPage);
 
         if (cmd->isRunning()) {

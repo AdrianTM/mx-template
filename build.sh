@@ -18,12 +18,14 @@ TITLE_NAME="${ARRAY[@]^}"
 
 lupdate *.pro
 
+# Cleanup before copy
+make distclean
+
 cd $BUILD_DIR
-rsync -av $ORIG_DIR/ . --exclude='.git' --exclude='*.changes' --exclude='*.dsc' --exclude='*.deb' --exclude="build.sh" --exclude="$NAME.tar.xz" --exclude="*.pro.user*"
+rsync -av $ORIG_DIR/ . --exclude='.git' --exclude='*.changes' --exclude='*.dsc' --exclude='*.deb' --exclude="build.sh" --exclude="$NAME*.tar.xz" --exclude="*.pro.user*"
 
 # Cleanup code
-make clean
-rm Makefile
+make distclean
 
 # Rename files
 rename "s/CUSTOMPROGRAMNAME/$NAME/" *

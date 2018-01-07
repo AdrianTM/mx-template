@@ -57,7 +57,7 @@ private slots:
     void cmdStart();
     void cmdDone();
     void setConnections();
-    void tock(int, int); // tick-tock, updates progressBar when tick signal is emited
+    void progress(int elapsed, int duration); // updates progressBar when tick signal is emited
     void updateOutput(const QString &line);
     void on_buttonNext_clicked();
     void on_buttonAbout_clicked();
