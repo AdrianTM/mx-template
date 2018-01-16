@@ -27,11 +27,9 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    cmd.cpp \
     mainwindow.cpp
 
 HEADERS  += \
-    cmd.h \
     mainwindow.h
 
 FORMS    += \
@@ -51,4 +49,4 @@ TRANSLATIONS += translations/CUSTOMPROGRAMNAME_ca.ts \
 RESOURCES += \
     images.qrc
 
-
+unix:!macx: LIBS += -lcmd

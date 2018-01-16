@@ -89,7 +89,6 @@ void MainWindow::setConnections()
 {
     cmd->disconnect();
     connect(cmd, &Cmd::outputAvailable, this, &MainWindow::updateOutput);
-    connect(cmd, &Cmd::runTime, this, &MainWindow::tock);  // processes runtime emited by Cmd to be used by a progress bar
     connect(cmd, &Cmd::started, this, &MainWindow::cmdStart);
     connect(cmd, &Cmd::finished, this, &MainWindow::cmdDone);
 }
@@ -121,6 +120,7 @@ void MainWindow::on_buttonNext_clicked()
         if (cmd->isRunning()) {
             return;
         }
+
 
     // on output page
     } else if (ui->stackedWidget->currentWidget() == ui->outputPage) {
