@@ -143,7 +143,6 @@ void MainWindow::on_buttonBack_clicked()
 // About button clicked
 void MainWindow::on_buttonAbout_clicked()
 {
-    this->hide();
     QMessageBox msgBox(QMessageBox::NoIcon,
                        tr("About") + " Custom_Program_Name", "<p align=\"center\"><b><h2>Custom_Program_Name</h2></b></p><p align=\"center\">" +
                        tr("Version: ") + getVersion("CUSTOMPROGRAMNAME") + "</p><p align=\"center\"><h3>" +
@@ -154,13 +153,14 @@ void MainWindow::on_buttonAbout_clicked()
     msgBox.addButton(tr("Cancel"), QMessageBox::NoRole);
     if (msgBox.exec() == QMessageBox::AcceptRole) {
         QString url = "file:///usr/share/doc/CUSTOMPROGRAMNAME/license.html";
+        Cmd c;
+        QString user = c.getOutput("logname");
         if (system("command -v mx-viewer") == 0) { // use mx-viewer if available
-            system("mx-viewer " + url.toUtf8() + " " + tr("License").toUtf8());
+            system("su " + user.toUtf8() + " -c \"mx-viewer '" + url.toUtf8() + " " + tr("License").toUtf8() + "'\"&");
         } else {
-            system("xdg-open " + url.toUtf8());
+            system("su " + user.toUtf8() + " -c \"xdg-open " + url.toUtf8() + "\"&");
         }
     }
-    this->show();
 }
 
 // Help button clicked
@@ -172,7 +172,9 @@ void MainWindow::on_buttonHelp_clicked()
         exec = "mx-viewer";
         url += " Custom_Program_Name";
     }
-    QString cmd = QString(exec + " " + url + "&");
+    Cmd c;
+    QString user = c.getOutput("logname");
+    QString cmd = QString("su " + username + " -c \"" + exec + " " + url + "\"&");
     system(cmd.toUtf8());
 }
 
