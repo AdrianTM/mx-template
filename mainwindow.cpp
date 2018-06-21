@@ -69,7 +69,7 @@ void MainWindow::cleanup()
 QString MainWindow::getVersion(QString name)
 {
     Cmd cmd;
-    return cmd.getOutput("dpkg -l "+ name + "| awk 'NR==6 {print $3}'");
+    return cmd.getOutput("dpkg-query -f '${Version}' -W " + name);
 }
 
 void MainWindow::cmdStart()
@@ -170,7 +170,7 @@ void MainWindow::on_buttonHelp_clicked()
     QString exec = "xdg-open";
     if (system("command -v mx-viewer") == 0) { // use mx-viewer if available
         exec = "mx-viewer";
-        url += " Custom_Program_Name";
+        url += " " + tr("Custom_Program_Name");
     }
     Cmd c;
     QString user = c.getOutput("logname");
