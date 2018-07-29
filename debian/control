@@ -10,7 +10,7 @@ Standards-Version: 3.9.8
 
 Package: CUSTOMPROGRAMNAME
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, libcmd, xdg-utils|mx-viewer
+Depends: ${misc:Depends}, ${shlibs:Depends}, libcmd, xdg-utils|mx-viewer, gzip
 Description: CUSTOMPROGRAMNAME
  CUSTOMPROGRAMNAME
 

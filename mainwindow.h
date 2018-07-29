@@ -26,10 +26,6 @@
 #define MAINWINDOW_H
 
 #include <QMessageBox>
-#include <QProcess>
-#include <QTimer>
-#include <QSettings>
-#include <QFile>
 
 #include <cmd.h>
 
@@ -67,7 +63,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Cmd *cmd;
-    QTimer *timer;
 };
 
 
