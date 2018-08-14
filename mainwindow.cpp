@@ -1,7 +1,7 @@
 /**********************************************************************
  *  mainwindow.cpp
  **********************************************************************
- * Copyright (C) 2017 MX Authors
+ * Copyright (C) 2018 MX Authors
  *
  * Authors: Adrian
  *          MX Linux <http://mxlinux.org>
@@ -174,7 +174,7 @@ void MainWindow::on_buttonAbout_clicked()
         Cmd cmd;
         text->setText(cmd.getOutput("zless /usr/share/doc/" + QFileInfo(QCoreApplication::applicationFilePath()).fileName()  + "/changelog.gz"));
 
-        QPushButton *btnClose = new QPushButton(tr("&Close"));
+        QPushButton *btnClose = new QPushButton(tr("Close"));
         btnClose->setIcon(QIcon::fromTheme("window-close"));
         connect(btnClose, &QPushButton::clicked, changelog, &QDialog::close);
 

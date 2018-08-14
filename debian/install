@@ -2,6 +2,7 @@ CUSTOMPROGRAMNAME		usr/bin
 CUSTOMPROGRAMNAME.desktop	usr/share/applications
 CUSTOMPROGRAMNAME.conf	etc
 CUSTOMPROGRAMNAME.png		usr/share/pixmaps
+CUSTOMPROGRAMNAME.png		usr/share/icons/hicolor/48x48/apps
 translations/*.qm	usr/share/CUSTOMPROGRAMNAME/locale
 license.html            usr/share/doc/CUSTOMPROGRAMNAME
 
