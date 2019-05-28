@@ -42,8 +42,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    QString getVersion(QString name);
-
     void setup();
 
 public slots:
