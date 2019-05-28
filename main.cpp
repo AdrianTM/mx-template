@@ -33,6 +33,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     a.setWindowIcon(QIcon("/usr/share/pixmaps/CUSTOMPROGRAMNAME.png"));
+    a.setOrganizationName("MX-Linux");
+    a.setApplicationName("CUSTOMPROGRAMNAME");
 
     QTranslator qtTran;
     qtTran.load(QString("qt_") + QLocale::system().name());
@@ -50,6 +52,6 @@ int main(int argc, char *argv[])
 //        QApplication::beep();
 //        QMessageBox::critical(0, QString::null,
 //                              QApplication::tr("You must run this program as root."));
-//        return 1;
+//        return EXIT_FAILURE;
 //    }
 }

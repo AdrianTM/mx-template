@@ -19,6 +19,7 @@
 # **********************************************************************/
 
 QT       += core gui
+CONFIG   += c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -30,7 +31,8 @@ SOURCES += main.cpp\
     mainwindow.cpp
 
 HEADERS  += \
-    mainwindow.h
+    mainwindow.h \
+    version.h
 
 FORMS    += \
     mainwindow.ui

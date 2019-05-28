@@ -24,6 +24,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "version.h"
 
 #include <QFileDialog>
 #include <QScrollBar>
@@ -36,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MainWindow)
 {
+    qDebug() << "Program Version:" << VERSION;
     ui->setupUi(this);
     setup();
 }
@@ -62,14 +64,6 @@ void MainWindow::setup()
 void MainWindow::cleanup()
 {
 
-}
-
-
-// Get version of the program
-QString MainWindow::getVersion(QString name)
-{
-    Cmd cmd;
-    return cmd.getOutput("dpkg-query -f '${Version}' -W " + name);
 }
 
 void MainWindow::cmdStart()
