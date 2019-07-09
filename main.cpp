@@ -20,13 +20,13 @@
  * along with this package. If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-
-#include "mainwindow.h"
-#include <unistd.h>
 #include <QApplication>
 #include <QTranslator>
 #include <QLocale>
 #include <QIcon>
+
+#include "mainwindow.h"
+#include <unistd.h>
 
 
 int main(int argc, char *argv[])

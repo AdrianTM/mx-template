@@ -20,18 +20,15 @@
  * along with this package. If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-
-
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "version.h"
-
 #include <QFileDialog>
 #include <QScrollBar>
 #include <QTextStream>
 
 #include <QDebug>
 
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "version.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QDialog(parent),
@@ -140,7 +137,7 @@ void MainWindow::on_buttonAbout_clicked()
 {
     QMessageBox msgBox(QMessageBox::NoIcon,
                        tr("About") + " Custom_Program_Name", "<p align=\"center\"><b><h2>Custom_Program_Name</h2></b></p><p align=\"center\">" +
-                       tr("Version: ") + getVersion("CUSTOMPROGRAMNAME") + "</p><p align=\"center\"><h3>" +
+                       tr("Version: ") + VERSION + "</p><p align=\"center\"><h3>" +
                        tr("Description goes here") +
                        "</h3></p><p align=\"center\"><a href=\"http://mxlinux.org\">http://mxlinux.org</a><br /></p><p align=\"center\">" +
                        tr("Copyright (c) MX Linux") + "<br /><br /></p>");
