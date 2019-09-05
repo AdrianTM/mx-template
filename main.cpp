@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     a.setWindowIcon(QIcon("/usr/share/pixmaps/CUSTOMPROGRAMNAME.png"));
-    a.setOrganizationName("MX-Linux");
     a.setApplicationName("CUSTOMPROGRAMNAME");
 
     QTranslator qtTran;
