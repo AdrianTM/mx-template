@@ -26,6 +26,8 @@
 
 #include <QDebug>
 
+#include <about.h>
+#include <cmd.h>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "version.h"
@@ -48,7 +50,6 @@ MainWindow::~MainWindow()
 // setup versious items first time program runs
 void MainWindow::setup()
 {
-    cmd = new Cmd(this);
     connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::cleanup);
     this->setWindowTitle("Custom_Program_Name");
     this->adjustSize();
@@ -79,17 +80,20 @@ void MainWindow::cmdDone()
 // set proc and timer connections
 void MainWindow::setConnections()
 {
-    cmd->disconnect();
-    connect(cmd, &Cmd::outputAvailable, this, &MainWindow::updateOutput);
-    connect(cmd, &Cmd::started, this, &MainWindow::cmdStart);
-    connect(cmd, &Cmd::finished, this, &MainWindow::cmdDone);
+    proc.disconnect();
+    connect(&proc, &QProcess::readyReadStandardOutput, this, &MainWindow::updateOutput);
+    connect(&proc, &QProcess::started, this, &MainWindow::cmdStart);
+    connect(&proc, static_cast<void (QProcess::*)(int)>(&QProcess::finished), this, &MainWindow::cmdDone);
 }
 
-void MainWindow::updateOutput(const QString &output)
+void MainWindow::updateOutput()
 {
-    ui->outputBox->insertPlainText(output);
+    QString out = proc.readAll();
+    qDebug() << out;
+    ui->outputBox->insertPlainText(out);
     QScrollBar *sb = ui->outputBox->verticalScrollBar();
     sb->setValue(sb->maximum());
+    qApp->processEvents();
 }
 
 void MainWindow::progress(int counter, int duration) // processes tick emited by Cmd to be used by a progress bar
@@ -109,9 +113,11 @@ void MainWindow::on_buttonNext_clicked()
         ui->outputLabel->clear();
         ui->stackedWidget->setCurrentWidget(ui->outputPage);
 
-        if (cmd->isRunning()) {
-            return;
-        }
+        setConnections();
+        Cmd cmd;
+        qDebug() << cmd.getCmdOut("");
+        //qDebug() << getCmdOut(proc, "find / -iname '*user'");
+        qDebug() << "DONE";
 
 
     // on output page
@@ -135,61 +141,22 @@ void MainWindow::on_buttonBack_clicked()
 // About button clicked
 void MainWindow::on_buttonAbout_clicked()
 {
-    QMessageBox msgBox(QMessageBox::NoIcon,
-                       tr("About") + " Custom_Program_Name", "<p align=\"center\"><b><h2>Custom_Program_Name</h2></b></p><p align=\"center\">" +
+    this->hide();
+    displayAboutMsgBox( tr("About %1") + "Custom_Program_Name",
+                       "<p align=\"center\"><b><h2>Custom_Program_Name</h2></b></p><p align=\"center\">" +
                        tr("Version: ") + VERSION + "</p><p align=\"center\"><h3>" +
                        tr("Description goes here") +
                        "</h3></p><p align=\"center\"><a href=\"http://mxlinux.org\">http://mxlinux.org</a><br /></p><p align=\"center\">" +
-                       tr("Copyright (c) MX Linux") + "<br /><br /></p>");
-    QPushButton *btnLicense = msgBox.addButton(tr("License"), QMessageBox::HelpRole);
-    QPushButton *btnChangelog = msgBox.addButton(tr("Changelog"), QMessageBox::HelpRole);
-    QPushButton *btnCancel = msgBox.addButton(tr("Cancel"), QMessageBox::NoRole);
-    btnCancel->setIcon(QIcon::fromTheme("window-close"));
+                       tr("Copyright (c) MX Linux") + "<br /><br /></p>",
+                        "/usr/share/doc/CUSTOMPROGRAMNAME/license.html", tr("%1 License").arg(this->windowTitle()), false);
 
-    msgBox.exec();
-
-    if (msgBox.clickedButton() == btnLicense) {
-        QString url = "file:///usr/share/doc/CUSTOMPROGRAMNAME/license.html";
-        Cmd c;
-        QString user = c.getOutput("logname");
-        if (system("command -v mx-viewer") == 0) { // use mx-viewer if available
-            system("su " + user.toUtf8() + " -c \"mx-viewer " + url.toUtf8() + " " + tr("License").toUtf8() + "\"&");
-        } else {
-            system("su " + user.toUtf8() + " -c \"xdg-open " + url.toUtf8() + "\"&");
-        }
-    } else if (msgBox.clickedButton() == btnChangelog) {
-        QDialog *changelog = new QDialog(this);
-        changelog->resize(600, 500);
-
-        QTextEdit *text = new QTextEdit;
-        text->setReadOnly(true);
-        Cmd cmd;
-        text->setText(cmd.getOutput("zless /usr/share/doc/" + QFileInfo(QCoreApplication::applicationFilePath()).fileName()  + "/changelog.gz"));
-
-        QPushButton *btnClose = new QPushButton(tr("Close"));
-        btnClose->setIcon(QIcon::fromTheme("window-close"));
-        connect(btnClose, &QPushButton::clicked, changelog, &QDialog::close);
-
-        QVBoxLayout *layout = new QVBoxLayout;
-        layout->addWidget(text);
-        layout->addWidget(btnClose);
-        changelog->setLayout(layout);
-        changelog->exec();
-    }
+    this->show();
 }
 
 // Help button clicked
 void MainWindow::on_buttonHelp_clicked()
 {
     QString url = "google.com";
-    QString exec = "xdg-open";
-    if (system("command -v mx-viewer") == 0) { // use mx-viewer if available
-        exec = "mx-viewer";
-        url += " " + tr("Custom_Program_Name");
-    }
-    Cmd c;
-    QString user = c.getOutput("logname");
-    QString cmd = QString("su " + user + " -c \"" + exec + " " + url + "\"&");
-    system(cmd.toUtf8());
+    displayDoc(url, tr("%1 Help").arg(this->windowTitle()), false);
 }
 

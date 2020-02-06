@@ -26,8 +26,7 @@
 #define MAINWINDOW_H
 
 #include <QMessageBox>
-
-#include <cmd.h>
+#include <QProcess>
 
 
 namespace Ui {
@@ -39,7 +38,7 @@ class MainWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
     void setup();
@@ -52,7 +51,7 @@ private slots:
     void cmdDone();
     void setConnections();
     void progress(int elapsed, int duration); // updates progressBar when tick signal is emited
-    void updateOutput(const QString &line);
+    void updateOutput();
     void on_buttonNext_clicked();
     void on_buttonAbout_clicked();
     void on_buttonHelp_clicked();
@@ -60,7 +59,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    Cmd *cmd;
+    QProcess proc;
 };
 
 
