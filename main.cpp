@@ -21,9 +21,11 @@
  **********************************************************************/
 
 #include <QApplication>
-#include <QTranslator>
-#include <QLocale>
+#include <QDebug>
 #include <QIcon>
+#include <QLibraryInfo>
+#include <QLocale>
+#include <QTranslator>
 
 #include "mainwindow.h"
 #include <unistd.h>
@@ -31,26 +33,35 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    a.setWindowIcon(QIcon("/usr/share/pixmaps/CUSTOMPROGRAMNAME.png"));
-    a.setApplicationName("CUSTOMPROGRAMNAME");
+    QApplication app(argc, argv);
+    app.setWindowIcon(QIcon("/usr/share/pixmaps/CUSTOMPROGRAMNAME.png"));
+    app.setApplicationName("CUSTOMPROGRAMNAME");
 
     QTranslator qtTran;
-    qtTran.load(QString("qt_") + QLocale::system().name());
-    a.installTranslator(&qtTran);
+    if (qtTran.load(QLocale::system(), "qt", "_", QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+        app.installTranslator(&qtTran);
+
+    QTranslator qtBaseTran;
+    if (qtBaseTran.load("qtbase_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+        app.installTranslator(&qtBaseTran);
 
     QTranslator appTran;
-    appTran.load(QString("CUSTOMPROGRAMNAME_") + QLocale::system().name(), "/usr/share/CUSTOMPROGRAMNAME/locale");
-    a.installTranslator(&appTran);
+    if (appTran.load(app.applicationName() + "_" + QLocale::system().name(), "/usr/share/" + app.applicationName() + "/locale"))
+        app.installTranslator(&appTran);
+
+    // root guard
+    if (system("logname |grep -q ^root$") == 0) {
+        QMessageBox::critical(nullptr, QObject::tr("Error"),
+                              QObject::tr("You seem to be logged in as root, please log out and log in as normal user to use this program."));
+        exit(EXIT_FAILURE);
+    }
 
 //    if (getuid() == 0) {
+        qDebug().noquote() << app.applicationName() << QObject::tr("version:") << app.applicationVersion();
         MainWindow w;
         w.show();
-        return a.exec();
+        return app.exec();
 //    } else {
-//        QApplication::beep();
-//        QMessageBox::critical(0, QString::null,
-//                              QApplication::tr("You must run this program as root."));
-//        return EXIT_FAILURE;
+//        system("su-to-root -X -c " + QApplication::applicationFilePath().toUtf8() + "&");
 //    }
 }

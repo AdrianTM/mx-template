@@ -20,31 +20,46 @@
  * along with this package. If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
+#include <QDebug>
+#include <QDesktopWidget>
 #include <QFileDialog>
 #include <QScrollBar>
 #include <QTextStream>
 
-#include <QDebug>
-
-#include <about.h>
-#include <cmd.h>
+#include "about.h"
+#include "cmd.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "version.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MainWindow)
 {
-    qDebug() << "Program Version:" << VERSION;
     ui->setupUi(this);
     setWindowFlags(Qt::Window); // for the close, min and max buttons
+
+    QSize size = this->size();
+    if (settings.contains("geometry")) {
+        restoreGeometry(settings.value("geometry").toByteArray());
+        if (this->isMaximized()) { // add option to resize if maximized
+            this->resize(size);
+            centerWindow();
+        }
+    }
     setup();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::centerWindow()
+{
+    QRect screenGeometry = QApplication::desktop()->screenGeometry();
+    int x = (screenGeometry.width()-this->width()) / 2;
+    int y = (screenGeometry.height()-this->height()) / 2;
+    this->move(x, y);
 }
 
 // setup versious items first time program runs
@@ -124,7 +139,7 @@ void MainWindow::on_buttonNext_clicked()
     } else if (ui->stackedWidget->currentWidget() == ui->outputPage) {
 
     } else {
-        return qApp->quit();
+        qApp->quit();
     }
 }
 
@@ -144,11 +159,11 @@ void MainWindow::on_buttonAbout_clicked()
     this->hide();
     displayAboutMsgBox( tr("About %1") + "Custom_Program_Name",
                        "<p align=\"center\"><b><h2>Custom_Program_Name</h2></b></p><p align=\"center\">" +
-                       tr("Version: ") + VERSION + "</p><p align=\"center\"><h3>" +
+                       tr("Version: ") + qApp->applicationVersion() + "</p><p align=\"center\"><h3>" +
                        tr("Description goes here") +
                        "</h3></p><p align=\"center\"><a href=\"http://mxlinux.org\">http://mxlinux.org</a><br /></p><p align=\"center\">" +
                        tr("Copyright (c) MX Linux") + "<br /><br /></p>",
-                        "/usr/share/doc/CUSTOMPROGRAMNAME/license.html", tr("%1 License").arg(this->windowTitle()), false);
+                        "/usr/share/doc/CUSTOMPROGRAMNAME/license.html", tr("%1 License").arg(this->windowTitle()));
 
     this->show();
 }
@@ -157,6 +172,6 @@ void MainWindow::on_buttonAbout_clicked()
 void MainWindow::on_buttonHelp_clicked()
 {
     QString url = "google.com";
-    displayDoc(url, tr("%1 Help").arg(this->windowTitle()), false);
+    displayDoc(url, tr("%1 Help").arg(this->windowTitle()));
 }
 

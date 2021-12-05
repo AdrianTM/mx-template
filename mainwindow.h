@@ -21,12 +21,12 @@
  **********************************************************************/
 
 
-
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMessageBox>
 #include <QProcess>
+#include <QSettings>
 
 
 namespace Ui {
@@ -40,7 +40,7 @@ class MainWindow : public QDialog
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    void centerWindow();
     void setup();
 
 public slots:
@@ -60,6 +60,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QProcess proc;
+    QSettings settings;
 };
 
 
