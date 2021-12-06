@@ -66,7 +66,6 @@ void MainWindow::centerWindow()
 void MainWindow::setup()
 {
     connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::cleanup);
-    this->setWindowTitle("Custom_Program_Name");
     this->adjustSize();
     ui->buttonBack->setHidden(true);;
     ui->stackedWidget->setCurrentIndex(0);
