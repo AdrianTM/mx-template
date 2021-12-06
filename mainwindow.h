@@ -46,7 +46,6 @@ public:
 public slots:
 
 private slots:
-    void cleanup();
     void cmdStart();
     void cmdDone();
     void setConnections();

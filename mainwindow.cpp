@@ -21,8 +21,8 @@
  **********************************************************************/
 
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QFileDialog>
+#include <QScreen>
 #include <QScrollBar>
 #include <QTextStream>
 
@@ -51,12 +51,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    settings.setValue("geometry", saveGeometry());
     delete ui;
 }
 
 void MainWindow::centerWindow()
 {
-    QRect screenGeometry = QApplication::desktop()->screenGeometry();
+    QRect screenGeometry = qApp->primaryScreen()->geometry();
     int x = (screenGeometry.width()-this->width()) / 2;
     int y = (screenGeometry.height()-this->height()) / 2;
     this->move(x, y);
@@ -65,18 +66,11 @@ void MainWindow::centerWindow()
 // setup versious items first time program runs
 void MainWindow::setup()
 {
-    connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::cleanup);
     this->adjustSize();
     ui->buttonBack->setHidden(true);;
     ui->stackedWidget->setCurrentIndex(0);
     ui->buttonCancel->setEnabled(true);
     ui->buttonNext->setEnabled(true);
-}
-
-// cleanup environment when window is closed
-void MainWindow::cleanup()
-{
-
 }
 
 void MainWindow::cmdStart()
@@ -97,7 +91,7 @@ void MainWindow::setConnections()
     proc.disconnect();
     connect(&proc, &QProcess::readyReadStandardOutput, this, &MainWindow::updateOutput);
     connect(&proc, &QProcess::started, this, &MainWindow::cmdStart);
-    connect(&proc, static_cast<void (QProcess::*)(int)>(&QProcess::finished), this, &MainWindow::cmdDone);
+    connect(&proc, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &MainWindow::cmdDone);
 }
 
 void MainWindow::updateOutput()
