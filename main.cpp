@@ -34,8 +34,9 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    app.setWindowIcon(QIcon("/usr/share/pixmaps/CUSTOMPROGRAMNAME.png"));
+    app.setOrganizationName("MX-Linux");
     app.setApplicationName("CUSTOMPROGRAMNAME");
+    app.setWindowIcon(QIcon::fromTheme(app.applicationName()));
 
     QTranslator qtTran;
     if (qtTran.load(QLocale::system(), "qt", "_", QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
