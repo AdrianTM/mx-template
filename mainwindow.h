@@ -51,10 +51,10 @@ private slots:
     void setConnections();
     void progress(int elapsed, int duration); // updates progressBar when tick signal is emited
     void updateOutput();
-    void on_buttonNext_clicked();
-    void on_buttonAbout_clicked();
-    void on_buttonHelp_clicked();
-    void on_buttonBack_clicked();
+    void on_pushNext_clicked();
+    void on_pushAbout_clicked();
+    void on_pushHelp_clicked();
+    void on_pushBack_clicked();
 
 private:
     Ui::MainWindow *ui;

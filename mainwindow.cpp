@@ -67,10 +67,10 @@ void MainWindow::centerWindow()
 void MainWindow::setup()
 {
     this->adjustSize();
-    ui->buttonBack->setHidden(true);;
+    ui->pushBack->setHidden(true);;
     ui->stackedWidget->setCurrentIndex(0);
-    ui->buttonCancel->setEnabled(true);
-    ui->buttonNext->setEnabled(true);
+    ui->pushCancel->setEnabled(true);
+    ui->pushNext->setEnabled(true);
 }
 
 void MainWindow::cmdStart()
@@ -110,14 +110,13 @@ void MainWindow::progress(int counter, int duration) // processes tick emited by
     ui->progressBar->setValue(counter % (duration + 1));
 }
 
-// Next button clicked
-void MainWindow::on_buttonNext_clicked()
+void MainWindow::on_pushNext_clicked()
 {
     // on first page
     if (ui->stackedWidget->currentIndex() == 0) {
-        ui->buttonBack->setHidden(false);
-        ui->buttonBack->setEnabled(true);
-        ui->buttonNext->setEnabled(false);
+        ui->pushBack->setHidden(false);
+        ui->pushBack->setEnabled(true);
+        ui->pushNext->setEnabled(false);
         ui->outputLabel->clear();
         ui->stackedWidget->setCurrentWidget(ui->outputPage);
 
@@ -136,18 +135,17 @@ void MainWindow::on_buttonNext_clicked()
     }
 }
 
-void MainWindow::on_buttonBack_clicked()
+void MainWindow::on_pushBack_clicked()
 {
     this->setWindowTitle("Custom_Program_Name");
     ui->stackedWidget->setCurrentIndex(0);
-    ui->buttonNext->setEnabled(true);
-    ui->buttonBack->setDisabled(true);
+    ui->pushNext->setEnabled(true);
+    ui->pushBack->setDisabled(true);
     ui->outputBox->clear();
 }
 
 
-// About button clicked
-void MainWindow::on_buttonAbout_clicked()
+void MainWindow::on_pushAbout_clicked()
 {
     this->hide();
     displayAboutMsgBox( tr("About %1") + "Custom_Program_Name",
@@ -162,7 +160,7 @@ void MainWindow::on_buttonAbout_clicked()
 }
 
 // Help button clicked
-void MainWindow::on_buttonHelp_clicked()
+void MainWindow::on_pushHelp_clicked()
 {
     QString url = "google.com";
     displayDoc(url, tr("%1 Help").arg(this->windowTitle()));
