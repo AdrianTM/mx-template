@@ -148,7 +148,7 @@ void MainWindow::on_pushBack_clicked()
 void MainWindow::on_pushAbout_clicked()
 {
     this->hide();
-    displayAboutMsgBox( tr("About %1") + "Custom_Program_Name",
+    displayAboutMsgBox( tr("About %1") + tr("Custom_Program_Name"),
                        "<p align=\"center\"><b><h2>Custom_Program_Name</h2></b></p><p align=\"center\">" +
                        tr("Version: ") + qApp->applicationVersion() + "</p><p align=\"center\"><h3>" +
                        tr("Description goes here") +
