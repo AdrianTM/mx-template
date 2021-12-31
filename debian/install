@@ -3,5 +3,5 @@ CUSTOMPROGRAMNAME.conf	etc
 CUSTOMPROGRAMNAME.desktop	usr/share/applications
 CUSTOMPROGRAMNAME.png		usr/share/icons/hicolor/48x48/apps
 CUSTOMPROGRAMNAME.png		usr/share/pixmaps
-help			usr/share/doc/CUSTOMPROGRAMNAME
+help/*			usr/share/doc/CUSTOMPROGRAMNAME
 translations/*.qm	usr/share/CUSTOMPROGRAMNAME/locale
