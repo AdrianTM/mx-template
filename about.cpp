@@ -16,14 +16,10 @@ void displayDoc(QString url, QString title)
     if (system("command -v mx-viewer >/dev/null") == 0) {
         system("/usr/bin/mx-viewer " + url.toUtf8() + " \"" + title.toUtf8() + "\"&");
     } else {
-        if (getuid() != 0) {
+        if (getuid() != 0)
             system("/usr/bin/xdg-open " + url.toUtf8());
-        } else {
-            Cmd cmd;
-            QString user = cmd.getCmdOut("/usr/bin/logname", true);
-            system("runuser -l " + user.toUtf8() + " -c \"env XDG_RUNTIME_DIR=/run/user/$(id -u " +
-                   user.toUtf8() + ") /usr/bin/xdg-open " + url.toUtf8() + "\"&");
-        }
+        else
+            system("runuser $(logname) -c \"env XDG_RUNTIME_DIR=/run/user/$(id -u $(logname)) xdg-open " + url.toUtf8() + "\"&");
     }
 }
 
