@@ -26,9 +26,9 @@ void displayDoc(QString url, QString title)
 void displayAboutMsgBox(QString title, QString message, QString licence_url, QString license_title)
 {
     QMessageBox msgBox(QMessageBox::NoIcon, title, message);
-    QPushButton *btnLicense = msgBox.addButton(QApplication::tr("License"), QMessageBox::HelpRole);
-    QPushButton *btnChangelog = msgBox.addButton(QApplication::tr("Changelog"), QMessageBox::HelpRole);
-    QPushButton *btnCancel = msgBox.addButton(QApplication::tr("Cancel"), QMessageBox::NoRole);
+    QPushButton *btnLicense = msgBox.addButton(QObject::tr("License"), QMessageBox::HelpRole);
+    QPushButton *btnChangelog = msgBox.addButton(QObject::tr("Changelog"), QMessageBox::HelpRole);
+    QPushButton *btnCancel = msgBox.addButton(QObject::tr("Cancel"), QMessageBox::NoRole);
     btnCancel->setIcon(QIcon::fromTheme("window-close"));
 
     msgBox.exec();
@@ -37,7 +37,7 @@ void displayAboutMsgBox(QString title, QString message, QString licence_url, QSt
         displayDoc(licence_url, license_title);
     } else if (msgBox.clickedButton() == btnChangelog) {
         QDialog *changelog = new QDialog();
-        changelog->setWindowTitle(QApplication::tr("Changelog"));
+        changelog->setWindowTitle(QObject::tr("Changelog"));
         changelog->resize(600, 500);
 
         QTextEdit *text = new QTextEdit;
@@ -45,9 +45,9 @@ void displayAboutMsgBox(QString title, QString message, QString licence_url, QSt
         Cmd cmd;
         text->setText(cmd.getCmdOut("zless /usr/share/doc/" + QFileInfo(QCoreApplication::applicationFilePath()).fileName()  + "/changelog.gz"));
 
-        QPushButton *btnClose = new QPushButton(QApplication::tr("&Close"));
+        QPushButton *btnClose = new QPushButton(QObject::tr("&Close"));
         btnClose->setIcon(QIcon::fromTheme("window-close"));
-        QApplication::connect(btnClose, &QPushButton::clicked, changelog, &QDialog::close);
+        QObject::connect(btnClose, &QPushButton::clicked, changelog, &QDialog::close);
 
         QVBoxLayout *layout = new QVBoxLayout;
         layout->addWidget(text);

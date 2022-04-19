@@ -98,6 +98,7 @@ void MainWindow::updateOutput()
 {
     QString out = proc.readAll();
     qDebug() << out;
+    ui->outputBox->moveCursor(QTextCursor::End);
     ui->outputBox->insertPlainText(out);
     QScrollBar *sb = ui->outputBox->verticalScrollBar();
     sb->setValue(sb->maximum());
