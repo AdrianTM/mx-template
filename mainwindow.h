@@ -46,15 +46,16 @@ public:
 public slots:
 
 private slots:
-    void cmdStart();
     void cmdDone();
-    void setConnections();
+    void cmdStart();
     void progress(int elapsed, int duration); // updates progressBar when tick signal is emited
+    void pushAbout_clicked();
+    void pushBack_clicked();
+    void pushHelp_clicked();
+    void pushNext_clicked();
+    void setConnections();
+    void setGeneralConnections();
     void updateOutput();
-    void on_pushNext_clicked();
-    void on_pushAbout_clicked();
-    void on_pushHelp_clicked();
-    void on_pushBack_clicked();
 
 private:
     Ui::MainWindow *ui;

@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowFlags(Qt::Window); // for the close, min and max buttons
+    setGeneralConnections();
 
     QSize size = this->size();
     if (settings.contains("geometry")) {
@@ -94,13 +95,21 @@ void MainWindow::setConnections()
     connect(&proc, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &MainWindow::cmdDone);
 }
 
+void MainWindow::setGeneralConnections()
+{
+    connect(ui->pushAbout, &QPushButton::clicked, this, &MainWindow::pushAbout_clicked);
+    connect(ui->pushBack, &QPushButton::clicked, this, &MainWindow::pushBack_clicked);
+    connect(ui->pushHelp, &QPushButton::clicked, this, &MainWindow::pushHelp_clicked);
+    connect(ui->pushNext, &QPushButton::clicked, this, &MainWindow::pushNext_clicked);
+}
+
 void MainWindow::updateOutput()
 {
-    QString out = proc.readAll();
+    const QString out = proc.readAll();
     qDebug() << out;
     ui->outputBox->moveCursor(QTextCursor::End);
     ui->outputBox->insertPlainText(out);
-    QScrollBar *sb = ui->outputBox->verticalScrollBar();
+    auto sb = ui->outputBox->verticalScrollBar();
     sb->setValue(sb->maximum());
     qApp->processEvents();
 }
@@ -111,7 +120,7 @@ void MainWindow::progress(int counter, int duration) // processes tick emited by
     ui->progressBar->setValue(counter % (duration + 1));
 }
 
-void MainWindow::on_pushNext_clicked()
+void MainWindow::pushNext_clicked()
 {
     // on first page
     if (ui->stackedWidget->currentIndex() == 0) {
@@ -136,7 +145,7 @@ void MainWindow::on_pushNext_clicked()
     }
 }
 
-void MainWindow::on_pushBack_clicked()
+void MainWindow::pushBack_clicked()
 {
     this->setWindowTitle("Custom_Program_Name");
     ui->stackedWidget->setCurrentIndex(0);
@@ -146,7 +155,7 @@ void MainWindow::on_pushBack_clicked()
 }
 
 
-void MainWindow::on_pushAbout_clicked()
+void MainWindow::pushAbout_clicked()
 {
     this->hide();
     displayAboutMsgBox( tr("About %1") + tr("Custom_Program_Name"),
@@ -161,9 +170,9 @@ void MainWindow::on_pushAbout_clicked()
 }
 
 // Help button clicked
-void MainWindow::on_pushHelp_clicked()
+void MainWindow::pushHelp_clicked()
 {
-    QString url = "google.com";
+    const QString url = "google.com";
     displayDoc(url, tr("%1 Help").arg(this->windowTitle()));
 }
 
