@@ -48,7 +48,7 @@ public slots:
 private slots:
     void cmdDone();
     void cmdStart();
-    void progress(int elapsed, int duration); // updates progressBar when tick signal is emited
+    void progress(int counter, int duration); // updates progressBar when tick signal is emited
     void pushAbout_clicked();
     void pushBack_clicked();
     void pushHelp_clicked();

@@ -8,16 +8,6 @@ Cmd::Cmd(QObject *parent)
 {
 }
 
-void Cmd::halt()
-{
-    if (state() != QProcess::NotRunning) {
-        terminate();
-        waitForFinished(5000);
-        kill();
-        waitForFinished(1000);
-    }
-}
-
 bool Cmd::run(const QString &cmd, bool quiet)
 {
     QByteArray output;
@@ -41,7 +31,7 @@ bool Cmd::run(const QString &cmd, QByteArray &output, bool quiet)
     if (!quiet) qDebug().noquote() << cmd;
     QEventLoop loop;
     connect(this, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), &loop, &QEventLoop::quit);
-    start("/bin/bash", QStringList() << "-c" << cmd);
+    start(QStringLiteral("/bin/bash"), {"-c", cmd});
     loop.exec();
     output = readAll().trimmed();
     return (exitStatus() == QProcess::NormalExit && exitCode() == 0);

@@ -40,8 +40,8 @@ MainWindow::MainWindow(QWidget *parent) :
     setGeneralConnections();
 
     QSize size = this->size();
-    if (settings.contains("geometry")) {
-        restoreGeometry(settings.value("geometry").toByteArray());
+    if (settings.contains(QStringLiteral("geometry"))) {
+        restoreGeometry(settings.value(QStringLiteral("geometry")).toByteArray());
         if (this->isMaximized()) { // add option to resize if maximized
             this->resize(size);
             centerWindow();
@@ -52,13 +52,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    settings.setValue("geometry", saveGeometry());
+    settings.setValue(QStringLiteral("geometry"), saveGeometry());
     delete ui;
 }
 
 void MainWindow::centerWindow()
 {
-    QRect screenGeometry = qApp->primaryScreen()->geometry();
+    QRect screenGeometry = QApplication::primaryScreen()->geometry();
     int x = (screenGeometry.width()-this->width()) / 2;
     int y = (screenGeometry.height()-this->height()) / 2;
     this->move(x, y);
@@ -109,9 +109,9 @@ void MainWindow::updateOutput()
     qDebug() << out;
     ui->outputBox->moveCursor(QTextCursor::End);
     ui->outputBox->insertPlainText(out);
-    auto sb = ui->outputBox->verticalScrollBar();
+    auto *sb = ui->outputBox->verticalScrollBar();
     sb->setValue(sb->maximum());
-    qApp->processEvents();
+    QApplication::processEvents();
 }
 
 void MainWindow::progress(int counter, int duration) // processes tick emited by Cmd to be used by a progress bar
@@ -132,7 +132,7 @@ void MainWindow::pushNext_clicked()
 
         setConnections();
         Cmd cmd;
-        qDebug() << cmd.getCmdOut("");
+        qDebug() << cmd.getCmdOut(QLatin1String(""));
         //qDebug() << getCmdOut(proc, "find / -iname '*user'");
         qDebug() << "DONE";
 
@@ -141,13 +141,13 @@ void MainWindow::pushNext_clicked()
     } else if (ui->stackedWidget->currentWidget() == ui->outputPage) {
 
     } else {
-        qApp->quit();
+        QApplication::quit();
     }
 }
 
 void MainWindow::pushBack_clicked()
 {
-    this->setWindowTitle("Custom_Program_Name");
+    this->setWindowTitle(QStringLiteral("Custom_Program_Name"));
     ui->stackedWidget->setCurrentIndex(0);
     ui->pushNext->setEnabled(true);
     ui->pushBack->setDisabled(true);
@@ -159,12 +159,12 @@ void MainWindow::pushAbout_clicked()
 {
     this->hide();
     displayAboutMsgBox( tr("About %1") + tr("Custom_Program_Name"),
-                       "<p align=\"center\"><b><h2>Custom_Program_Name</h2></b></p><p align=\"center\">" +
-                       tr("Version: ") + qApp->applicationVersion() + "</p><p align=\"center\"><h3>" +
+                       R"(<p align="center"><b><h2>Custom_Program_Name</h2></b></p><p align="center">)" +
+                       tr("Version: ") + QApplication::applicationVersion() + "</p><p align=\"center\"><h3>" +
                        tr("Description goes here") +
-                       "</h3></p><p align=\"center\"><a href=\"http://mxlinux.org\">http://mxlinux.org</a><br /></p><p align=\"center\">" +
+                       R"(</h3></p><p align="center"><a href="http://mxlinux.org">http://mxlinux.org</a><br /></p><p align="center">)" +
                        tr("Copyright (c) MX Linux") + "<br /><br /></p>",
-                        "/usr/share/doc/CUSTOMPROGRAMNAME/license.html", tr("%1 License").arg(this->windowTitle()));
+                        QStringLiteral("/usr/share/doc/CUSTOMPROGRAMNAME/license.html"), tr("%1 License").arg(this->windowTitle()));
 
     this->show();
 }
@@ -172,7 +172,7 @@ void MainWindow::pushAbout_clicked()
 // Help button clicked
 void MainWindow::pushHelp_clicked()
 {
-    const QString url = "google.com";
+    const QString url = QStringLiteral("google.com");
     displayDoc(url, tr("%1 Help").arg(this->windowTitle()));
 }
 
