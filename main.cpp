@@ -33,7 +33,12 @@
 
 int main(int argc, char *argv[])
 {
+    if (getuid() == 0) {
+        qputenv("XDG_RUNTIME_DIR", "/run/user/0");
+        qunsetenv("SESSION_MANAGER");
+    }
     QApplication app(argc, argv);
+    if (getuid() == 0) qputenv("HOME", "/root");
     QApplication::setOrganizationName(QStringLiteral("MX-Linux"));
     QApplication::setWindowIcon(QIcon::fromTheme(QApplication::applicationName()));
 
