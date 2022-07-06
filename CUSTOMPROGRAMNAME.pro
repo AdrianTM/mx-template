@@ -47,6 +47,7 @@ FORMS    += \
 TRANSLATIONS += translations/CUSTOMPROGRAMNAME_ca.ts \
                 translations/CUSTOMPROGRAMNAME_de.ts \
                 translations/CUSTOMPROGRAMNAME_el.ts \
+                translations/CUSTOMPROGRAMNAME_en.ts \
                 translations/CUSTOMPROGRAMNAME_es.ts \
                 translations/CUSTOMPROGRAMNAME_fr.ts \
                 translations/CUSTOMPROGRAMNAME_it.ts \
