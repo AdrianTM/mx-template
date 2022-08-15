@@ -50,6 +50,7 @@ TRANSLATIONS += translations/CUSTOMPROGRAMNAME_ca.ts \
                 translations/CUSTOMPROGRAMNAME_en.ts \
                 translations/CUSTOMPROGRAMNAME_es.ts \
                 translations/CUSTOMPROGRAMNAME_fr.ts \
+                translations/CUSTOMPROGRAMNAME_fr_BE.ts \
                 translations/CUSTOMPROGRAMNAME_it.ts \
                 translations/CUSTOMPROGRAMNAME_ja.ts \
                 translations/CUSTOMPROGRAMNAME_nl.ts \
