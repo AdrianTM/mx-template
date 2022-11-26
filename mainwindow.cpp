@@ -19,6 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this package. If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
 
 #include <QDebug>
 #include <QFileDialog>
@@ -28,12 +30,10 @@
 
 #include "about.h"
 #include "cmd.h"
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setWindowFlags(Qt::Window); // for the close, min and max buttons
@@ -59,8 +59,8 @@ MainWindow::~MainWindow()
 void MainWindow::centerWindow()
 {
     QRect screenGeometry = QApplication::primaryScreen()->geometry();
-    int x = (screenGeometry.width()-this->width()) / 2;
-    int y = (screenGeometry.height()-this->height()) / 2;
+    int x = (screenGeometry.width() - this->width()) / 2;
+    int y = (screenGeometry.height() - this->height()) / 2;
     this->move(x, y);
 }
 
@@ -68,17 +68,14 @@ void MainWindow::centerWindow()
 void MainWindow::setup()
 {
     this->adjustSize();
-    ui->pushBack->setHidden(true);;
+    ui->pushBack->setHidden(true);
+    ;
     ui->stackedWidget->setCurrentIndex(0);
     ui->pushCancel->setEnabled(true);
     ui->pushNext->setEnabled(true);
 }
 
-void MainWindow::cmdStart()
-{
-    setCursor(QCursor(Qt::BusyCursor));
-}
-
+void MainWindow::cmdStart() { setCursor(QCursor(Qt::BusyCursor)); }
 
 void MainWindow::cmdDone()
 {
@@ -97,6 +94,7 @@ void MainWindow::setConnections()
 
 void MainWindow::setGeneralConnections()
 {
+    connect(ui->pushCancel, &QPushButton::pressed, this, &MainWindow::close);
     connect(ui->pushAbout, &QPushButton::clicked, this, &MainWindow::pushAbout_clicked);
     connect(ui->pushBack, &QPushButton::clicked, this, &MainWindow::pushBack_clicked);
     connect(ui->pushHelp, &QPushButton::clicked, this, &MainWindow::pushHelp_clicked);
@@ -133,11 +131,10 @@ void MainWindow::pushNext_clicked()
         setConnections();
         Cmd cmd;
         qDebug() << cmd.getCmdOut(QLatin1String(""));
-        //qDebug() << getCmdOut(proc, "find / -iname '*user'");
+        // qDebug() << getCmdOut(proc, "find / -iname '*user'");
         qDebug() << "DONE";
 
-
-    // on output page
+        // on output page
     } else if (ui->stackedWidget->currentWidget() == ui->outputPage) {
 
     } else {
@@ -154,17 +151,16 @@ void MainWindow::pushBack_clicked()
     ui->outputBox->clear();
 }
 
-
 void MainWindow::pushAbout_clicked()
 {
     this->hide();
-    displayAboutMsgBox( tr("About %1") + tr("Custom_Program_Name"),
-                       R"(<p align="center"><b><h2>Custom_Program_Name</h2></b></p><p align="center">)" +
-                       tr("Version: ") + QApplication::applicationVersion() + "</p><p align=\"center\"><h3>" +
-                       tr("Description goes here") +
-                       R"(</h3></p><p align="center"><a href="http://mxlinux.org">http://mxlinux.org</a><br /></p><p align="center">)" +
-                       tr("Copyright (c) MX Linux") + "<br /><br /></p>",
-                        QStringLiteral("/usr/share/doc/CUSTOMPROGRAMNAME/license.html"), tr("%1 License").arg(this->windowTitle()));
+    displayAboutMsgBox(
+        tr("About %1") + tr("Custom_Program_Name"),
+        R"(<p align="center"><b><h2>Custom_Program_Name</h2></b></p><p align="center">)" + tr("Version: ")
+            + QApplication::applicationVersion() + "</p><p align=\"center\"><h3>" + tr("Description goes here")
+            + R"(</h3></p><p align="center"><a href="http://mxlinux.org">http://mxlinux.org</a><br /></p><p align="center">)"
+            + tr("Copyright (c) MX Linux") + "<br /><br /></p>",
+        QStringLiteral("/usr/share/doc/CUSTOMPROGRAMNAME/license.html"), tr("%1 License").arg(this->windowTitle()));
 
     this->show();
 }
@@ -175,4 +171,3 @@ void MainWindow::pushHelp_clicked()
     const QString url = QStringLiteral("google.com");
     displayDoc(url, tr("%1 Help").arg(this->windowTitle()));
 }
-

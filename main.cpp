@@ -30,7 +30,6 @@
 #include "mainwindow.h"
 #include <unistd.h>
 
-
 int main(int argc, char *argv[])
 {
     if (getuid() == 0) {
@@ -38,12 +37,14 @@ int main(int argc, char *argv[])
         qunsetenv("SESSION_MANAGER");
     }
     QApplication app(argc, argv);
-    if (getuid() == 0) qputenv("HOME", "/root");
+    if (getuid() == 0)
+        qputenv("HOME", "/root");
     QApplication::setOrganizationName(QStringLiteral("MX-Linux"));
     QApplication::setWindowIcon(QIcon::fromTheme(QApplication::applicationName()));
 
     QTranslator qtTran;
-    if (qtTran.load(QLocale::system(), QStringLiteral("qt"), QStringLiteral("_"), QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+    if (qtTran.load(QLocale::system(), QStringLiteral("qt"), QStringLiteral("_"),
+                    QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         QApplication::installTranslator(&qtTran);
 
     QTranslator qtBaseTran;
@@ -51,22 +52,26 @@ int main(int argc, char *argv[])
         QApplication::installTranslator(&qtBaseTran);
 
     QTranslator appTran;
-    if (appTran.load(QApplication::applicationName() + "_" + QLocale::system().name(), "/usr/share/" + QApplication::applicationName() + "/locale"))
+    if (appTran.load(QApplication::applicationName() + "_" + QLocale::system().name(),
+                     "/usr/share/" + QApplication::applicationName() + "/locale"))
         QApplication::installTranslator(&appTran);
 
     // root guard
     if (QProcess::execute(QStringLiteral("/bin/bash"), {"-c", "logname |grep -q ^root$"}) == 0) {
-        QMessageBox::critical(nullptr, QObject::tr("Error"),
-                              QObject::tr("You seem to be logged in as root, please log out and log in as normal user to use this program."));
+        QMessageBox::critical(
+            nullptr, QObject::tr("Error"),
+            QObject::tr(
+                "You seem to be logged in as root, please log out and log in as normal user to use this program."));
         exit(EXIT_FAILURE);
     }
 
-//    if (getuid() == 0) {
-        qDebug().noquote() << QApplication::applicationName() << QObject::tr("version:") << QApplication::applicationVersion();
-        MainWindow w;
-        w.show();
-        return QApplication::exec();
-//    } else {
-//        QProcess::startDetached(QStringLiteral("/usr/bin/..."), {});
-//    }
+    //    if (getuid() == 0) {
+    qDebug().noquote() << QApplication::applicationName() << QObject::tr("version:")
+                       << QApplication::applicationVersion();
+    MainWindow w;
+    w.show();
+    return QApplication::exec();
+    //    } else {
+    //        QProcess::startDetached(QStringLiteral("/usr/bin/..."), {});
+    //    }
 }

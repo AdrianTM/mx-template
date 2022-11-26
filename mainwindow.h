@@ -20,7 +20,6 @@
  * along with this package. If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -28,8 +27,8 @@
 #include <QProcess>
 #include <QSettings>
 
-
-namespace Ui {
+namespace Ui
+{
 class MainWindow;
 }
 
@@ -63,6 +62,4 @@ private:
     QSettings settings;
 };
 
-
 #endif
-
