@@ -27,9 +27,13 @@
 #include <QScreen>
 #include <QScrollBar>
 #include <QTextStream>
+#include <QTimer>
 
 #include "about.h"
 #include "cmd.h"
+#include <chrono>
+
+using namespace std::chrono_literals;
 
 MainWindow::MainWindow(QWidget *parent)
     : QDialog(parent)
@@ -75,21 +79,33 @@ void MainWindow::setup()
     ui->pushNext->setEnabled(true);
 }
 
-void MainWindow::cmdStart() { setCursor(QCursor(Qt::BusyCursor)); }
+void MainWindow::cmdStart()
+{
+    ui->progressBar->setValue(0);
+    timer.start(500ms);
+    setCursor(QCursor(Qt::BusyCursor));
+}
 
 void MainWindow::cmdDone()
 {
     ui->progressBar->setValue(ui->progressBar->maximum());
+    timer.stop();
     setCursor(QCursor(Qt::ArrowCursor));
 }
 
 // set proc and timer connections
 void MainWindow::setConnections()
 {
-    proc.disconnect();
-    connect(&proc, &QProcess::readyReadStandardOutput, this, &MainWindow::updateOutput);
-    connect(&proc, &QProcess::started, this, &MainWindow::cmdStart);
-    connect(&proc, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &MainWindow::cmdDone);
+    cmd.disconnect();
+    timer.disconnect();
+    QObject::connect(&timer, &QTimer::timeout, [this] {
+        static int counter = 0;
+        ++counter;
+        progress(counter, 10);
+    });
+    connect(&cmd, &QProcess::readyReadStandardOutput, this, &MainWindow::updateOutput);
+    connect(&cmd, &QProcess::started, this, &MainWindow::cmdStart);
+    connect(&cmd, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &MainWindow::cmdDone);
 }
 
 void MainWindow::setGeneralConnections()
@@ -103,8 +119,7 @@ void MainWindow::setGeneralConnections()
 
 void MainWindow::updateOutput()
 {
-    const QString out = proc.readAll();
-    qDebug() << out;
+    const QString out = cmd.readAll();
     ui->outputBox->moveCursor(QTextCursor::End);
     ui->outputBox->insertPlainText(out);
     auto *sb = ui->outputBox->verticalScrollBar();
@@ -112,10 +127,11 @@ void MainWindow::updateOutput()
     QApplication::processEvents();
 }
 
-void MainWindow::progress(int counter, int duration) // processes tick emited by Cmd to be used by a progress bar
+void MainWindow::progress(int counter, int duration) // processes a counter to be used by a progress bar
 {
     ui->progressBar->setMaximum(duration);
     ui->progressBar->setValue(counter % (duration + 1));
+    QApplication::processEvents();
 }
 
 void MainWindow::pushNext_clicked()
@@ -129,9 +145,7 @@ void MainWindow::pushNext_clicked()
         ui->stackedWidget->setCurrentWidget(ui->outputPage);
 
         setConnections();
-        Cmd cmd;
-        qDebug() << cmd.getCmdOut(QLatin1String(""));
-        // qDebug() << getCmdOut(proc, "find / -iname '*user'");
+        // cmd.getCmdOut(QLatin1String("du /home"));
         qDebug() << "DONE";
 
         // on output page
