@@ -26,9 +26,6 @@
 #include <QMessageBox>
 #include <QProcess>
 #include <QSettings>
-#include <QTimer>
-
-#include "cmd.h"
 
 namespace Ui
 {
@@ -60,10 +57,9 @@ private slots:
     void updateOutput();
 
 private:
-    Cmd cmd;
-    QSettings settings;
-    QTimer timer;
     Ui::MainWindow *ui;
+    QProcess proc;
+    QSettings settings;
 };
 
 #endif
