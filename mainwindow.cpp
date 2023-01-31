@@ -69,7 +69,7 @@ void MainWindow::setup()
 {
     this->adjustSize();
     ui->pushBack->setHidden(true);
-    ;
+
     ui->stackedWidget->setCurrentIndex(0);
     ui->pushCancel->setEnabled(true);
     ui->pushNext->setEnabled(true);
