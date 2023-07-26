@@ -7,20 +7,27 @@
 #include <QPushButton>
 #include <QTextEdit>
 #include <QVBoxLayout>
+#include <QStandardPaths>
 
-#include "version.h"
 #include <unistd.h>
+
+extern const QString starting_home;
 
 // display doc as nomal user when run as root
 void displayDoc(const QString &url, const QString &title)
 {
+    bool started_as_root = false;
+    if (qEnvironmentVariable("HOME") == QLatin1String("root")) {
+        started_as_root = true;
+        qputenv("HOME", starting_home.toUtf8()); // use original home for theming purposes
+    }
     // prefer mx-viewer otherwise use xdg-open (use runuser to run that as logname user)
-    if (QFile::exists(QStringLiteral("/usr/bin/mx-viewer"))) {
-        QProcess::startDetached(QStringLiteral("mx-viewer"), {url, title});
+    QString executablePath = QStandardPaths::findExecutable("mx-viewer");
+    if (!executablePath.isEmpty()) {
+        QProcess::execute(QStringLiteral("mx-viewer"), {url, title});
     } else {
         if (getuid() != 0) {
-            QProcess::startDetached(QStringLiteral("xdg-open"), {url});
-            return;
+            QProcess::execute(QStringLiteral("xdg-open"), {url});
         } else {
             QProcess proc;
             proc.start(QStringLiteral("logname"), {}, QIODevice::ReadOnly);
@@ -30,6 +37,8 @@ void displayDoc(const QString &url, const QString &title)
                                                                 QStringLiteral("xdg-open"), url});
         }
     }
+    if (started_as_root)
+        qputenv("HOME", "/root");
 }
 
 void displayAboutMsgBox(const QString &title, const QString &message, const QString &licence_url,
@@ -44,6 +53,7 @@ void displayAboutMsgBox(const QString &title, const QString &message, const QStr
     btnCancel->setIcon(QIcon::fromTheme(QStringLiteral("window-close")));
 
     msgBox.exec();
+
     if (msgBox.clickedButton() == btnLicense) {
         displayDoc(licence_url, license_title);
     } else if (msgBox.clickedButton() == btnChangelog) {
@@ -59,7 +69,7 @@ void displayAboutMsgBox(const QString &title, const QString &message, const QStr
                     + QStringLiteral("/changelog.gz")},
                    QIODevice::ReadOnly);
         proc.waitForFinished();
-        text->setText(QString::fromLatin1(proc.readAllStandardOutput()));
+        text->setText(proc.readAllStandardOutput());
 
         auto *btnClose = new QPushButton(QObject::tr("&Close"), changelog);
         btnClose->setIcon(QIcon::fromTheme(QStringLiteral("window-close")));
