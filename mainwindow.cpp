@@ -32,8 +32,8 @@
 #include "cmd.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QDialog(parent)
-    , ui(new Ui::MainWindow)
+    : QDialog(parent),
+      ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setWindowFlags(Qt::Window); // for the close, min and max buttons
@@ -75,7 +75,10 @@ void MainWindow::setup()
     ui->pushNext->setEnabled(true);
 }
 
-void MainWindow::cmdStart() { setCursor(QCursor(Qt::BusyCursor)); }
+void MainWindow::cmdStart()
+{
+    setCursor(QCursor(Qt::BusyCursor));
+}
 
 void MainWindow::cmdDone()
 {

@@ -5,9 +5,9 @@
 #include <QMessageBox>
 #include <QProcess>
 #include <QPushButton>
+#include <QStandardPaths>
 #include <QTextEdit>
 #include <QVBoxLayout>
-#include <QStandardPaths>
 
 #include <unistd.h>
 
@@ -37,8 +37,9 @@ void displayDoc(const QString &url, const QString &title)
                                                                 QStringLiteral("xdg-open"), url});
         }
     }
-    if (started_as_root)
+    if (started_as_root) {
         qputenv("HOME", "/root");
+    }
 }
 
 void displayAboutMsgBox(const QString &title, const QString &message, const QString &licence_url,
