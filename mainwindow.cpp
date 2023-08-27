@@ -1,9 +1,9 @@
 /**********************************************************************
  *  mainwindow.cpp
  **********************************************************************
- * Copyright (C) 2018 MX Authors
+ * Copyright (C) 2023 MX Authors
  *
- * Authors: Adrian
+ * Authors: Adrian <adrian@mxlinux.org>
  *          MX Linux <http://mxlinux.org>
  *
  * This is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this package. If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 

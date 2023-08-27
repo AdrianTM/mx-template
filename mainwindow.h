@@ -1,9 +1,9 @@
 /**********************************************************************
  *  mainwindow.h
  **********************************************************************
- * Copyright (C) 2018 MX Authors
+ * Copyright (C) 2023 MX Authors
  *
- * Authors: Adrian
+ * Authors: Adrian <adrian@mxlinux.org>
  *          MX Linux <http://mxlinux.org>
  *
  * This is free software: you can redistribute it and/or modify
