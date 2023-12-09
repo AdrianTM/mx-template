@@ -19,7 +19,7 @@
 # **********************************************************************/
 
 QT       += core gui widgets
-CONFIG   += c++17
+CONFIG   += c++1z
 
 TARGET = CUSTOMPROGRAMNAME
 TEMPLATE = app
@@ -30,7 +30,8 @@ TEMPLATE = app
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
-SOURCES += main.cpp\
+SOURCES += \
+    main.cpp \
     mainwindow.cpp \
     about.cpp \
     cmd.cpp
@@ -44,18 +45,8 @@ HEADERS  += \
 FORMS    += \
     mainwindow.ui
 
-TRANSLATIONS += translations/CUSTOMPROGRAMNAME_ca.ts \
-                translations/CUSTOMPROGRAMNAME_de.ts \
-                translations/CUSTOMPROGRAMNAME_el.ts \
-                translations/CUSTOMPROGRAMNAME_en.ts \
-                translations/CUSTOMPROGRAMNAME_es.ts \
-                translations/CUSTOMPROGRAMNAME_fr.ts \
-                translations/CUSTOMPROGRAMNAME_fr_BE.ts \
-                translations/CUSTOMPROGRAMNAME_it.ts \
-                translations/CUSTOMPROGRAMNAME_ja.ts \
-                translations/CUSTOMPROGRAMNAME_nl.ts \
-                translations/CUSTOMPROGRAMNAME_ro.ts \
-                translations/CUSTOMPROGRAMNAME_sv.ts
+TRANSLATIONS += \
+    translations/CUSTOMPROGRAMNAME_en.ts
 
 RESOURCES += \
     images.qrc
