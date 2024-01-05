@@ -40,9 +40,9 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowFlags(Qt::Window); // for the close, min and max buttons
     setGeneralConnections();
 
-    QSize size = this->size();
-    if (settings.contains(QStringLiteral("geometry"))) {
-        restoreGeometry(settings.value(QStringLiteral("geometry")).toByteArray());
+    auto size = this->size();
+    if (settings.contains("geometry")) {
+        restoreGeometry(settings.value("geometry").toByteArray());
         if (this->isMaximized()) { // add option to resize if maximized
             this->resize(size);
             centerWindow();
@@ -53,19 +53,18 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    settings.setValue(QStringLiteral("geometry"), saveGeometry());
+    settings.setValue("geometry", saveGeometry());
     delete ui;
 }
 
 void MainWindow::centerWindow()
 {
-    QRect screenGeometry = QApplication::primaryScreen()->geometry();
-    int x = (screenGeometry.width() - this->width()) / 2;
-    int y = (screenGeometry.height() - this->height()) / 2;
+    const auto screenGeometry = QApplication::primaryScreen()->geometry();
+    const auto x = (screenGeometry.width() - this->width()) / 2;
+    const auto y = (screenGeometry.height() - this->height()) / 2;
     this->move(x, y);
 }
 
-// setup versious items first time program runs
 void MainWindow::setup()
 {
     this->adjustSize();
@@ -87,7 +86,6 @@ void MainWindow::cmdDone()
     setCursor(QCursor(Qt::ArrowCursor));
 }
 
-// set proc and timer connections
 void MainWindow::setConnections()
 {
     proc.disconnect();
@@ -124,7 +122,7 @@ void MainWindow::progress(int counter, int duration) // processes tick emited by
 
 void MainWindow::pushNext_clicked()
 {
-    // on first page
+    // On first page
     if (ui->stackedWidget->currentIndex() == 0) {
         ui->pushBack->setHidden(false);
         ui->pushBack->setEnabled(true);
@@ -138,7 +136,7 @@ void MainWindow::pushNext_clicked()
         // qDebug() << getCmdOut(proc, "find / -iname '*user'");
         qDebug() << "DONE";
 
-        // on output page
+        // On output page
     } else if (ui->stackedWidget->currentWidget() == ui->outputPage) {
 
     } else {
@@ -148,7 +146,7 @@ void MainWindow::pushNext_clicked()
 
 void MainWindow::pushBack_clicked()
 {
-    this->setWindowTitle(QStringLiteral("Custom_Program_Name"));
+    this->setWindowTitle("Custom_Program_Name");
     ui->stackedWidget->setCurrentIndex(0);
     ui->pushNext->setEnabled(true);
     ui->pushBack->setDisabled(true);
@@ -164,14 +162,13 @@ void MainWindow::pushAbout_clicked()
             + QApplication::applicationVersion() + "</p><p align=\"center\"><h3>" + tr("Description goes here")
             + R"(</h3></p><p align="center"><a href="http://mxlinux.org">http://mxlinux.org</a><br /></p><p align="center">)"
             + tr("Copyright (c) MX Linux") + "<br /><br /></p>",
-        QStringLiteral("/usr/share/doc/CUSTOMPROGRAMNAME/license.html"), tr("%1 License").arg(this->windowTitle()));
+        "/usr/share/doc/CUSTOMPROGRAMNAME/license.html", tr("%1 License").arg(this->windowTitle()));
 
     this->show();
 }
 
-// Help button clicked
 void MainWindow::pushHelp_clicked()
 {
-    const QString url = QStringLiteral("google.com");
+    const QString url = "google.com";
     displayDoc(url, tr("%1 Help").arg(this->windowTitle()));
 }

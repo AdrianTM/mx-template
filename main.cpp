@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     if (getuid() == 0) {
         qputenv("HOME", "/root");
     }
-    QApplication::setOrganizationName(QStringLiteral("MX-Linux"));
+    QApplication::setOrganizationName("MX-Linux");
     QApplication::setWindowIcon(QIcon::fromTheme(QApplication::applicationName()));
 
     QTranslator qtTran;
@@ -74,13 +74,9 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
     }
-    //    if (getuid() == 0) {
     qDebug().noquote() << QApplication::applicationName() << QObject::tr("version:")
                        << QApplication::applicationVersion();
     MainWindow w;
     w.show();
     return QApplication::exec();
-    //    } else {
-    //        QProcess::startDetached(QStringLiteral("/usr/bin/..."), {});
-    //    }
 }

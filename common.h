@@ -21,4 +21,6 @@
  **********************************************************************/
 #pragma once
 
-const QString starting_home = qEnvironmentVariable("HOME");
+#include <QString>
+
+inline const QString starting_home = qEnvironmentVariable("HOME");
