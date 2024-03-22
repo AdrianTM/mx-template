@@ -39,7 +39,6 @@ SOURCES += \
 HEADERS  += \
     common.h \
     mainwindow.h \
-    version.h \
     about.h \
     cmd.h
 

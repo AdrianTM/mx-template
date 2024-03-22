@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     }
 
     QTranslator appTran;
-    if (appTran.load(QApplication::applicationName() + "_" + QLocale::system().name(),
+    if (appTran.load(QApplication::applicationName() + '_' + QLocale::system().name(),
                      "/usr/share/" + QApplication::applicationName() + "/locale")) {
         QApplication::installTranslator(&appTran);
     }
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     if (loginUidFile.open(QIODevice::ReadOnly)) {
         QString loginUid = QString(loginUidFile.readAll()).trimmed();
         loginUidFile.close();
-        if (loginUid == "0") {
+        if (loginUid == '0') {
             QMessageBox::critical(
                 nullptr, QObject::tr("Error"),
                 QObject::tr(

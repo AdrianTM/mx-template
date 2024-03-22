@@ -21,6 +21,7 @@
  **********************************************************************/
 
 #include "mainwindow.h"
+#include "qapplication.h"
 #include "ui_mainwindow.h"
 
 #include <QDebug>
@@ -132,7 +133,7 @@ void MainWindow::pushNext_clicked()
 
         setConnections();
         Cmd cmd;
-        qDebug() << cmd.getCmdOut(QLatin1String(""));
+        qDebug() << cmd.getCmdOut("");
         // qDebug() << getCmdOut(proc, "find / -iname '*user'");
         qDebug() << "DONE";
 
