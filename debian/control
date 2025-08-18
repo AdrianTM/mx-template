@@ -2,22 +2,12 @@ Source: CUSTOMPROGRAMNAME
 Section: admin
 Priority: optional
 Maintainer: Adrian <adrian@mxlinux.org>
-Build-Depends:
- debhelper-compat (= 13),
- qt6-base-dev,
- qt6-base-dev-tools,
- qt6-tools-dev,
- qt6-tools-dev-tools
+Build-Depends: debhelper-compat (=12), cmake (>= 3.16), ninja-build, qt6-base-dev, qt6-base-dev-tools, qt6-tools-dev, qt6-tools-dev-tools
 Standards-Version: 3.9.8
-Homepage: https://example.com/customprogramname
-Vcs-Git: https://github.com/mxlinux/customprogramname.git
-Vcs-Browser: https://github.com/mxlinux/customprogramname
+Vcs-Git: git://github.com/mxlinux/CUSTOMPROGRAMNAME
 
 Package: CUSTOMPROGRAMNAME
 Architecture: any
-Depends:
- xdg-utils | mx-viewer,
- ${misc:Depends},
- ${shlibs:Depends}
+Depends: xdg-utils | mx-viewer, ${misc:Depends}, ${shlibs:Depends}
 Description: CUSTOMPROGRAMNAME
  CUSTOMPROGRAMNAME
