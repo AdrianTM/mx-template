@@ -32,6 +32,10 @@
 #include "mainwindow.h"
 #include <unistd.h>
 
+#ifndef VERSION
+    #define VERSION "?.?.?.?"
+#endif
+
 int main(int argc, char *argv[])
 {
     if (getuid() == 0) {
@@ -50,6 +54,7 @@ int main(int argc, char *argv[])
         qputenv("HOME", "/root");
     }
     QApplication::setOrganizationName("MX-Linux");
+    QApplication::setApplicationVersion(VERSION);
     QApplication::setWindowIcon(QIcon::fromTheme(QApplication::applicationName()));
 
     QTranslator qtTran;

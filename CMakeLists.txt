@@ -82,22 +82,21 @@ set(CMAKE_AUTORCC ON)
 
 # Define source files
 set(SOURCES
-    main.cpp
-    mainwindow.cpp
-    about.cpp
-    cmd.cpp
+    src/main.cpp
+    src/mainwindow.cpp
+    src/about.cpp
+    src/cmd.cpp
 )
 
 set(HEADERS
-    mainwindow.h
-    about.h
-    common.h
-    cmd.h
-    version.h
+    src/mainwindow.h
+    src/about.h
+    src/common.h
+    src/cmd.h
 )
 
 set(UI_FILES
-    mainwindow.ui
+    src/mainwindow.ui
 )
 
 set(RESOURCE_FILES
@@ -143,6 +142,7 @@ endif()
 target_compile_definitions(CUSTOMPROGRAMNAME PRIVATE
     QT_DEPRECATED_WARNINGS
     QT_DISABLE_DEPRECATED_BEFORE=0x060000
+    VERSION="${PROJECT_VERSION}"
 )
 
 # Release-specific optimizations
@@ -166,12 +166,7 @@ qt6_add_translations(CUSTOMPROGRAMNAME
     QM_FILES_OUTPUT_VARIABLE qm_files
 )
 
-# Generate version.h file
-configure_file(
-    "${CMAKE_SOURCE_DIR}/version.h.in"
-    "${CMAKE_BINARY_DIR}/version.h"
-    @ONLY
-)
+
 
 # Set target properties
 set_target_properties(CUSTOMPROGRAMNAME PROPERTIES
@@ -179,8 +174,7 @@ set_target_properties(CUSTOMPROGRAMNAME PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
-# Add build directory to include path for generated version.h
-target_include_directories(CUSTOMPROGRAMNAME PRIVATE ${CMAKE_BINARY_DIR})
+
 
 # Install target (required by Debian build system)
 # Other files are handled by debian/install
