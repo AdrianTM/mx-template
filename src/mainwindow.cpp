@@ -156,11 +156,13 @@ void MainWindow::pushBack_clicked()
 
 void MainWindow::pushAbout_clicked()
 {
+    const QString programName = tr("Custom_Program_Name");
     this->hide();
     displayAboutMsgBox(
-        tr("About %1") + tr("Custom_Program_Name"),
-        R"(<p align="center"><b><h2>Custom_Program_Name</h2></b></p><p align="center">)" + tr("Version: ")
-            + QApplication::applicationVersion() + "</p><p align=\"center\"><h3>" + tr("Description goes here")
+        tr("About %1").arg(programName),
+        R"(<p align="center"><b><h2>)" + programName
+            + R"(</h2></b></p><p align="center">)" + tr("Version: ") + QApplication::applicationVersion()
+            + "</p><p align=\"center\"><h3>" + tr("Description goes here")
             + R"(</h3></p><p align="center"><a href="http://mxlinux.org">http://mxlinux.org</a><br /></p><p align="center">)"
             + tr("Copyright (c) MX Linux") + "<br /><br /></p>",
         "/usr/share/doc/CUSTOMPROGRAMNAME/license.html", tr("%1 License").arg(this->windowTitle()));
