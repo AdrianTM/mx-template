@@ -23,4 +23,4 @@
 
 #include <QString>
 
-inline const QString starting_home = qEnvironmentVariable("HOME");
+extern const QString startingHome;

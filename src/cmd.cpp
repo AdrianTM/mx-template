@@ -30,8 +30,8 @@ Cmd::Cmd(QObject *parent)
 {
     connect(this, &Cmd::readyReadStandardOutput, [this] { emit outputAvailable(readAllStandardOutput()); });
     connect(this, &Cmd::readyReadStandardError, [this] { emit errorAvailable(readAllStandardError()); });
-    connect(this, &Cmd::outputAvailable, [this](const QString &out) { out_buffer += out; });
-    connect(this, &Cmd::errorAvailable, [this](const QString &out) { out_buffer += out; });
+    connect(this, &Cmd::outputAvailable, [this](const QString &out) { outBuffer += out; });
+    connect(this, &Cmd::errorAvailable, [this](const QString &out) { outBuffer += out; });
 }
 
 bool Cmd::run(const QString &cmd, bool quiet)
@@ -49,8 +49,7 @@ QString Cmd::getCmdOut(const QString &cmd, bool quiet)
 
 bool Cmd::run(const QString &cmd, QString *output, bool quiet)
 {
-    out_buffer.clear();
-    connect(this, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &Cmd::done);
+    outBuffer.clear();
     if (this->state() != QProcess::NotRunning) {
         qDebug() << "Process already running:" << this->program() << this->arguments();
         return false;
@@ -59,9 +58,18 @@ bool Cmd::run(const QString &cmd, QString *output, bool quiet)
         qDebug().noquote() << cmd;
     }
     QEventLoop loop;
-    connect(this, &Cmd::done, &loop, &QEventLoop::quit);
+    connect(this,
+            QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            this,
+            [this](int, QProcess::ExitStatus) { emit done(); },
+            Qt::UniqueConnection);
+    connect(this, &Cmd::done, &loop, &QEventLoop::quit, Qt::UniqueConnection);
     start(QStringLiteral("/bin/bash"), {QStringLiteral("-c"), cmd});
+    if (!waitForStarted()) {
+        qDebug() << "Failed to start process:" << cmd;
+        return false;
+    }
     loop.exec();
-    *output = out_buffer.trimmed();
+    *output = outBuffer.trimmed();
     return (exitStatus() == QProcess::NormalExit && exitCode() == 0);
 }

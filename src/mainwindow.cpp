@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowFlags(Qt::Window); // for the close, min and max buttons
     setGeneralConnections();
 
-    auto size = this->size();
+    const auto size = this->size();
     if (settings.contains("geometry")) {
         restoreGeometry(settings.value("geometry").toByteArray());
         if (this->isMaximized()) { // add option to resize if maximized
@@ -92,16 +92,19 @@ void MainWindow::setConnections()
     proc.disconnect();
     connect(&proc, &QProcess::readyReadStandardOutput, this, &MainWindow::updateOutput);
     connect(&proc, &QProcess::started, this, &MainWindow::cmdStart);
-    connect(&proc, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &MainWindow::cmdDone);
+    connect(&proc,
+            QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            this,
+            [this](int, QProcess::ExitStatus) { cmdDone(); });
 }
 
 void MainWindow::setGeneralConnections()
 {
     connect(ui->pushCancel, &QPushButton::pressed, this, &MainWindow::close);
-    connect(ui->pushAbout, &QPushButton::clicked, this, &MainWindow::pushAbout_clicked);
-    connect(ui->pushBack, &QPushButton::clicked, this, &MainWindow::pushBack_clicked);
-    connect(ui->pushHelp, &QPushButton::clicked, this, &MainWindow::pushHelp_clicked);
-    connect(ui->pushNext, &QPushButton::clicked, this, &MainWindow::pushNext_clicked);
+    connect(ui->pushAbout, &QPushButton::clicked, this, &MainWindow::pushAboutClicked);
+    connect(ui->pushBack, &QPushButton::clicked, this, &MainWindow::pushBackClicked);
+    connect(ui->pushHelp, &QPushButton::clicked, this, &MainWindow::pushHelpClicked);
+    connect(ui->pushNext, &QPushButton::clicked, this, &MainWindow::pushNextClicked);
 }
 
 void MainWindow::updateOutput()
@@ -112,7 +115,6 @@ void MainWindow::updateOutput()
     ui->outputBox->insertPlainText(out);
     auto *sb = ui->outputBox->verticalScrollBar();
     sb->setValue(sb->maximum());
-    QApplication::processEvents();
 }
 
 void MainWindow::progress(int counter, int duration) // processes tick emited by Cmd to be used by a progress bar
@@ -121,7 +123,7 @@ void MainWindow::progress(int counter, int duration) // processes tick emited by
     ui->progressBar->setValue(counter % (duration + 1));
 }
 
-void MainWindow::pushNext_clicked()
+void MainWindow::pushNextClicked()
 {
     // On first page
     if (ui->stackedWidget->currentIndex() == 0) {
@@ -145,18 +147,18 @@ void MainWindow::pushNext_clicked()
     }
 }
 
-void MainWindow::pushBack_clicked()
+void MainWindow::pushBackClicked()
 {
-    this->setWindowTitle("Custom_Program_Name");
+    this->setWindowTitle(QApplication::applicationName());
     ui->stackedWidget->setCurrentIndex(0);
     ui->pushNext->setEnabled(true);
     ui->pushBack->setDisabled(true);
     ui->outputBox->clear();
 }
 
-void MainWindow::pushAbout_clicked()
+void MainWindow::pushAboutClicked()
 {
-    const QString programName = tr("Custom_Program_Name");
+    const QString programName = QApplication::applicationName();
     this->hide();
     displayAboutMsgBox(
         tr("About %1").arg(programName),
@@ -170,8 +172,8 @@ void MainWindow::pushAbout_clicked()
     this->show();
 }
 
-void MainWindow::pushHelp_clicked()
+void MainWindow::pushHelpClicked()
 {
-    const QString url = "google.com";
+    const QString url = "https://mxlinux.org/wiki/help-files/help-mx-tools";
     displayDoc(url, tr("%1 Help").arg(this->windowTitle()));
 }

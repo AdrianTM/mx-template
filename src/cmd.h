@@ -41,5 +41,5 @@ signals:
     void outputAvailable(const QString &out);
 
 private:
-    QString out_buffer;
+    QString outBuffer;
 };

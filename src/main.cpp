@@ -36,6 +36,9 @@
     #define VERSION "?.?.?.?"
 #endif
 
+// Capture original HOME before any modifications
+const QString startingHome = qEnvironmentVariable("HOME");
+
 int main(int argc, char *argv[])
 {
     if (getuid() == 0) {
@@ -78,7 +81,7 @@ int main(int argc, char *argv[])
     if (loginUidFile.open(QIODevice::ReadOnly)) {
         QString loginUid = QString(loginUidFile.readAll()).trimmed();
         loginUidFile.close();
-        if (loginUid == '0') {
+        if (loginUid == "0") {
             QMessageBox::critical(
                 nullptr, QObject::tr("Error"),
                 QObject::tr(
