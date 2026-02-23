@@ -116,7 +116,11 @@ CMAKE_ARGS=(
 )
 
 if [ "$USE_CLANG" = true ]; then
-    CMAKE_ARGS+=(-DUSE_CLANG=ON)
+    CMAKE_ARGS+=(
+        -DCMAKE_C_COMPILER=clang
+        -DCMAKE_CXX_COMPILER=clang++
+        -DUSE_CLANG=ON
+    )
     echo "Using clang compiler"
 fi
 

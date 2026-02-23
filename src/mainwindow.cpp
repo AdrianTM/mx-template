@@ -26,10 +26,7 @@
 #include <QApplication>
 
 #include <QDebug>
-#include <QFileDialog>
 #include <QScreen>
-#include <QScrollBar>
-#include <QTextStream>
 
 #include "about.h"
 
@@ -110,7 +107,7 @@ void MainWindow::cmdFinished(int, QProcess::ExitStatus)
 
 void MainWindow::setGeneralConnections()
 {
-    connect(ui->pushCancel, &QPushButton::pressed, this, &MainWindow::close);
+    connect(ui->pushCancel, &QPushButton::clicked, this, &MainWindow::close);
     connect(ui->pushAbout, &QPushButton::clicked, this, &MainWindow::pushAboutClicked);
     connect(ui->pushBack, &QPushButton::clicked, this, &MainWindow::pushBackClicked);
     connect(ui->pushHelp, &QPushButton::clicked, this, &MainWindow::pushHelpClicked);
@@ -122,8 +119,6 @@ void MainWindow::updateOutput(const QString &out)
     qDebug().noquote() << out;
     ui->outputBox->moveCursor(QTextCursor::End);
     ui->outputBox->insertPlainText(out);
-    auto *sb = ui->outputBox->verticalScrollBar();
-    sb->setValue(sb->maximum());
 }
 
 void MainWindow::progress(int counter, int duration) // processes tick emited by Cmd to be used by a progress bar

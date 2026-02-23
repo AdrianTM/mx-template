@@ -59,13 +59,9 @@ if(CMAKE_GENERATOR STREQUAL "Ninja")
 endif()
 
 # Option to use clang for testing builds
-option(USE_CLANG "Use clang compiler" OFF)
-if(USE_CLANG)
-    set(CMAKE_C_COMPILER clang)
-    set(CMAKE_CXX_COMPILER clang++)
-    set(CMAKE_CXX_COMPILER_ID "Clang")
-    message(STATUS "Using clang compiler")
-endif()
+# The actual compiler must be set via -DCMAKE_CXX_COMPILER=clang++ before project(),
+# which build.sh handles. USE_CLANG here only selects clang-specific compile flags.
+option(USE_CLANG "Use clang-specific compile flags" OFF)
 
 # Find Qt6 components
 find_package(Qt6 REQUIRED COMPONENTS
@@ -140,7 +136,6 @@ endif()
 
 # Set compile definitions
 target_compile_definitions(CUSTOMPROGRAMNAME PRIVATE
-    QT_DEPRECATED_WARNINGS
     QT_DISABLE_DEPRECATED_BEFORE=0x060000
     VERSION="${PROJECT_VERSION}"
 )

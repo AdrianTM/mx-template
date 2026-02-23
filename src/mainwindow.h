@@ -48,13 +48,13 @@ private slots:
     void pushBackClicked();
     void pushHelpClicked();
     void pushNextClicked();
-    void setConnections();
-    void setGeneralConnections();
     void updateOutput(const QString &out);
 
 private:
     void centerWindow();
     void setup();
+    void setConnections();
+    void setGeneralConnections();
 
     Ui::MainWindow *ui;
     Cmd cmd;

@@ -33,6 +33,7 @@ Cmd::Cmd(QObject *parent)
     connect(this, &Cmd::readyReadStandardError, [this] { emit errorAvailable(readAllStandardError()); });
     connect(this, &Cmd::outputAvailable, [this](const QString &out) { outBuffer += out; });
     connect(this, &Cmd::errorAvailable, [this](const QString &out) { outBuffer += out; });
+    connect(this, &QProcess::finished, this, [this](int, QProcess::ExitStatus) { emit done(); });
 }
 
 bool Cmd::run(const QString &cmd, bool quiet, int timeoutMs)

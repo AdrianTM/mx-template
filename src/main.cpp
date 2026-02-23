@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
                 nullptr, QObject::tr("Error"),
                 QObject::tr(
                     "You seem to be logged in as root, please log out and log in as normal user to use this program."));
-            exit(EXIT_FAILURE);
+            return EXIT_FAILURE;
         }
     }
     qDebug().noquote() << QApplication::applicationName() << QObject::tr("version:")
