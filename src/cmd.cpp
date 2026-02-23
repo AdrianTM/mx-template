@@ -24,6 +24,7 @@
 
 #include <QDebug>
 #include <QEventLoop>
+#include <QTimer>
 
 Cmd::Cmd(QObject *parent)
     : QProcess(parent)
@@ -34,20 +35,20 @@ Cmd::Cmd(QObject *parent)
     connect(this, &Cmd::errorAvailable, [this](const QString &out) { outBuffer += out; });
 }
 
-bool Cmd::run(const QString &cmd, bool quiet)
+bool Cmd::run(const QString &cmd, bool quiet, int timeoutMs)
 {
     QString output;
-    return run(cmd, &output, quiet);
+    return run(cmd, &output, quiet, timeoutMs);
 }
 
-QString Cmd::getCmdOut(const QString &cmd, bool quiet)
+QString Cmd::getCmdOut(const QString &cmd, bool quiet, int timeoutMs)
 {
     QString output;
-    run(cmd, &output, quiet);
+    run(cmd, &output, quiet, timeoutMs);
     return output;
 }
 
-bool Cmd::run(const QString &cmd, QString *output, bool quiet)
+bool Cmd::run(const QString &cmd, QString *output, bool quiet, int timeoutMs)
 {
     outBuffer.clear();
     if (this->state() != QProcess::NotRunning) {
@@ -64,7 +65,28 @@ bool Cmd::run(const QString &cmd, QString *output, bool quiet)
         qDebug() << "Failed to start process:" << cmd;
         return false;
     }
+    QTimer timeout;
+    timeout.setSingleShot(true);
+    bool timedOut = false;
+    if (timeoutMs > 0) {
+        connect(&timeout, &QTimer::timeout, &loop, [&]() {
+            timedOut = true;
+            qDebug() << "Command timed out after" << timeoutMs << "ms:" << cmd;
+            loop.quit();
+        });
+        timeout.start(timeoutMs);
+    }
     loop.exec();
+    if (timeoutMs > 0 && timeout.isActive()) {
+        timeout.stop();
+    }
+    if (timedOut) {
+        terminate();
+        if (!waitForFinished(3000)) {
+            kill();
+            waitForFinished(1000);
+        }
+    }
     *output = outBuffer.trimmed();
-    return (exitStatus() == QProcess::NormalExit && exitCode() == 0);
+    return !timedOut && (exitStatus() == QProcess::NormalExit && exitCode() == 0);
 }
