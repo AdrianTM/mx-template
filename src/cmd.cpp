@@ -50,6 +50,10 @@ QString Cmd::getCmdOut(const QString &cmd, bool quiet, int timeoutMs)
 
 bool Cmd::run(const QString &cmd, QString *output, bool quiet, int timeoutMs)
 {
+    if (output == nullptr) {
+        qDebug() << "Output pointer is null";
+        return false;
+    }
     outBuffer.clear();
     if (this->state() != QProcess::NotRunning) {
         qDebug() << "Process already running:" << this->program() << this->arguments();
