@@ -50,7 +50,10 @@ void displayDoc(const QString &url, const QString &title)
         }
         QProcess proc;
         proc.start(QStringLiteral("logname"), {}, QIODevice::ReadOnly);
-        proc.waitForFinished(5000);
+        if (!proc.waitForFinished(5000)) {
+            qWarning() << "Timed out waiting for logname, falling back to root xdg-open";
+            return startDetachedChecked(QStringLiteral("xdg-open"), {docUrl});
+        }
         const auto user = QString::fromUtf8(proc.readAllStandardOutput()).trimmed();
         if (user.isEmpty() || proc.exitStatus() != QProcess::NormalExit) {
             qDebug() << "Failed to get login user, falling back to xdg-open";
@@ -108,8 +111,13 @@ void displayAboutMsgBox(const QString &title, const QString &message, const QStr
             QStringLiteral("zcat"),
             {"/usr/share/doc/" + QFileInfo(QCoreApplication::applicationFilePath()).fileName() + "/changelog.gz"},
             QIODevice::ReadOnly);
-        proc.waitForFinished(5000);
-        text->setText(proc.readAllStandardOutput());
+        if (!proc.waitForFinished(5000)) {
+            text->setText(QObject::tr("Timed out while reading changelog."));
+        } else if (proc.exitStatus() != QProcess::NormalExit || proc.exitCode() != 0) {
+            text->setText(QObject::tr("Unable to read changelog."));
+        } else {
+            text->setText(proc.readAllStandardOutput());
+        }
 
         auto *btnClose = new QPushButton(QObject::tr("&Close"), &changelog);
         btnClose->setIcon(QIcon::fromTheme("window-close"));
