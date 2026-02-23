@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setWindowFlags(Qt::Window); // for the close, min and max buttons
     setGeneralConnections();
+    setConnections();
 
     const auto size = this->size();
     if (settings.contains("geometry")) {
@@ -142,7 +143,6 @@ void MainWindow::pushNextClicked()
         ui->outputBox->clear();
         ui->stackedWidget->setCurrentWidget(ui->outputPage);
 
-        setConnections();
         const auto command = QStringLiteral("echo CUSTOMPROGRAMNAME template command");
         qDebug().noquote() << "Running command:" << command;
         cmd.run(command);
