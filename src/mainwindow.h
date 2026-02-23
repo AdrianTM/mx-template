@@ -21,7 +21,7 @@
  **********************************************************************/
 #pragma once
 
-#include <QMessageBox>
+#include <QDialog>
 #include <QSettings>
 
 #include "cmd.h"
