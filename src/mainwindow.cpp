@@ -32,7 +32,6 @@
 #include <QTextStream>
 
 #include "about.h"
-#include "cmd.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QDialog(parent),
@@ -90,10 +89,10 @@ void MainWindow::cmdDone()
 
 void MainWindow::setConnections()
 {
-    proc.disconnect();
-    connect(&proc, &QProcess::readyReadStandardOutput, this, &MainWindow::updateOutput);
-    connect(&proc, &QProcess::started, this, &MainWindow::cmdStart);
-    connect(&proc, &QProcess::finished, this, [this](int, QProcess::ExitStatus) { cmdDone(); });
+    cmd.disconnect();
+    connect(&cmd, &QProcess::readyReadStandardOutput, this, &MainWindow::updateOutput);
+    connect(&cmd, &QProcess::started, this, &MainWindow::cmdStart);
+    connect(&cmd, &QProcess::finished, this, [this](int, QProcess::ExitStatus) { cmdDone(); });
 }
 
 void MainWindow::setGeneralConnections()
@@ -107,7 +106,7 @@ void MainWindow::setGeneralConnections()
 
 void MainWindow::updateOutput()
 {
-    const QString out = proc.readAllStandardOutput();
+    const QString out = cmd.readAllStandardOutput();
     qDebug() << out;
     ui->outputBox->moveCursor(QTextCursor::End);
     ui->outputBox->insertPlainText(out);
@@ -129,13 +128,13 @@ void MainWindow::pushNextClicked()
         ui->pushBack->setEnabled(true);
         ui->pushNext->setEnabled(false);
         ui->outputLabel->clear();
+        ui->outputBox->clear();
         ui->stackedWidget->setCurrentWidget(ui->outputPage);
 
         setConnections();
-        Cmd cmd;
-        qDebug() << cmd.getCmdOut("");
-        // qDebug() << getCmdOut(proc, "find / -iname '*user'");
-        qDebug() << "DONE";
+        const auto command = QStringLiteral("echo CUSTOMPROGRAMNAME template command");
+        qDebug().noquote() << "Running command:" << command;
+        cmd.run(command);
 
         // On output page
     } else if (ui->stackedWidget->currentWidget() == ui->outputPage) {

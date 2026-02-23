@@ -22,8 +22,9 @@
 #pragma once
 
 #include <QMessageBox>
-#include <QProcess>
 #include <QSettings>
+
+#include "cmd.h"
 
 namespace Ui
 {
@@ -55,6 +56,6 @@ private:
     void setup();
 
     Ui::MainWindow *ui;
-    QProcess proc;
+    Cmd cmd;
     QSettings settings;
 };
