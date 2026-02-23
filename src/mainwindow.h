@@ -41,6 +41,7 @@ public:
 
 private slots:
     void cmdDone();
+    void cmdFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void cmdStart();
     void progress(int counter, int duration); // updates progressBar when tick signal is emited
     void pushAboutClicked();

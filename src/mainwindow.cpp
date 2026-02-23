@@ -96,10 +96,14 @@ void MainWindow::cmdDone()
 
 void MainWindow::setConnections()
 {
-    cmd.disconnect();
-    connect(&cmd, &QProcess::readyReadStandardOutput, this, &MainWindow::updateOutput);
-    connect(&cmd, &QProcess::started, this, &MainWindow::cmdStart);
-    connect(&cmd, &QProcess::finished, this, [this](int, QProcess::ExitStatus) { cmdDone(); });
+    connect(&cmd, &QProcess::readyReadStandardOutput, this, &MainWindow::updateOutput, Qt::UniqueConnection);
+    connect(&cmd, &QProcess::started, this, &MainWindow::cmdStart, Qt::UniqueConnection);
+    connect(&cmd, &QProcess::finished, this, &MainWindow::cmdFinished, Qt::UniqueConnection);
+}
+
+void MainWindow::cmdFinished(int, QProcess::ExitStatus)
+{
+    cmdDone();
 }
 
 void MainWindow::setGeneralConnections()
