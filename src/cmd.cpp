@@ -58,9 +58,7 @@ bool Cmd::run(const QString &cmd, QString *output, bool quiet)
         qDebug().noquote() << cmd;
     }
     QEventLoop loop;
-    connect(this, &QProcess::finished, this, [this](int, QProcess::ExitStatus) { emit done(); },
-            Qt::UniqueConnection);
-    connect(this, &Cmd::done, &loop, &QEventLoop::quit, Qt::UniqueConnection);
+    connect(this, &QProcess::finished, &loop, &QEventLoop::quit);
     start(QStringLiteral("/bin/bash"), {QStringLiteral("-c"), cmd});
     if (!waitForStarted()) {
         qDebug() << "Failed to start process:" << cmd;
