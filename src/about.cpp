@@ -37,6 +37,33 @@
 // Display doc as normal user when run as root
 void displayDoc(const QString &url, const QString &title)
 {
+    const auto startDetachedChecked = [](const QString &program, const QStringList &arguments) {
+        if (!QProcess::startDetached(program, arguments)) {
+            qWarning().noquote() << "Failed to start detached process:" << program << arguments;
+            return false;
+        }
+        return true;
+    };
+    const auto openWithXdgOpen = [&](const QString &docUrl) {
+        if (getuid() != 0) {
+            return startDetachedChecked(QStringLiteral("xdg-open"), {docUrl});
+        }
+        QProcess proc;
+        proc.start(QStringLiteral("logname"), {}, QIODevice::ReadOnly);
+        proc.waitForFinished(5000);
+        const auto user = QString::fromUtf8(proc.readAllStandardOutput()).trimmed();
+        if (user.isEmpty() || proc.exitStatus() != QProcess::NormalExit) {
+            qDebug() << "Failed to get login user, falling back to xdg-open";
+            return startDetachedChecked(QStringLiteral("xdg-open"), {docUrl});
+        }
+        if (!startDetachedChecked(
+                QStringLiteral("runuser"),
+                {QStringLiteral("-u"), user, QStringLiteral("--"), QStringLiteral("xdg-open"), docUrl})) {
+            return startDetachedChecked(QStringLiteral("xdg-open"), {docUrl});
+        }
+        return true;
+    };
+
     bool startedAsRoot = false;
     if (getuid() == 0) {
         startedAsRoot = true;
@@ -45,24 +72,11 @@ void displayDoc(const QString &url, const QString &title)
     // Prefer mx-viewer otherwise use xdg-open (use runuser to run that as logname user)
     const auto executablePath = QStandardPaths::findExecutable(QStringLiteral("mx-viewer"));
     if (!executablePath.isEmpty()) {
-        QProcess::startDetached(QStringLiteral("mx-viewer"), {url, title});
-    } else {
-        if (getuid() != 0) {
-            QProcess::startDetached(QStringLiteral("xdg-open"), {url});
-        } else {
-            QProcess proc;
-            proc.start(QStringLiteral("logname"), {}, QIODevice::ReadOnly);
-            proc.waitForFinished(5000);
-            const auto user = QString::fromUtf8(proc.readAllStandardOutput()).trimmed();
-            if (user.isEmpty() || proc.exitStatus() != QProcess::NormalExit) {
-                qDebug() << "Failed to get login user, falling back to xdg-open";
-                QProcess::startDetached(QStringLiteral("xdg-open"), {url});
-            } else {
-                QProcess::startDetached(
-                    QStringLiteral("runuser"),
-                    {QStringLiteral("-u"), user, QStringLiteral("--"), QStringLiteral("xdg-open"), url});
-            }
+        if (!startDetachedChecked(QStringLiteral("mx-viewer"), {url, title})) {
+            openWithXdgOpen(url);
         }
+    } else {
+        openWithXdgOpen(url);
     }
     if (startedAsRoot) {
         qputenv("HOME", "/root");
