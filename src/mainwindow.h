@@ -50,7 +50,7 @@ private slots:
     void pushNextClicked();
     void setConnections();
     void setGeneralConnections();
-    void updateOutput();
+    void updateOutput(const QString &out);
 
 private:
     void centerWindow();

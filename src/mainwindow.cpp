@@ -97,7 +97,8 @@ void MainWindow::cmdDone()
 
 void MainWindow::setConnections()
 {
-    connect(&cmd, &QProcess::readyReadStandardOutput, this, &MainWindow::updateOutput, Qt::UniqueConnection);
+    connect(&cmd, &Cmd::outputAvailable, this, &MainWindow::updateOutput, Qt::UniqueConnection);
+    connect(&cmd, &Cmd::errorAvailable, this, &MainWindow::updateOutput, Qt::UniqueConnection);
     connect(&cmd, &QProcess::started, this, &MainWindow::cmdStart, Qt::UniqueConnection);
     connect(&cmd, &QProcess::finished, this, &MainWindow::cmdFinished, Qt::UniqueConnection);
 }
@@ -116,10 +117,9 @@ void MainWindow::setGeneralConnections()
     connect(ui->pushNext, &QPushButton::clicked, this, &MainWindow::pushNextClicked);
 }
 
-void MainWindow::updateOutput()
+void MainWindow::updateOutput(const QString &out)
 {
-    const QString out = cmd.readAllStandardOutput();
-    qDebug() << out;
+    qDebug().noquote() << out;
     ui->outputBox->moveCursor(QTextCursor::End);
     ui->outputBox->insertPlainText(out);
     auto *sb = ui->outputBox->verticalScrollBar();
