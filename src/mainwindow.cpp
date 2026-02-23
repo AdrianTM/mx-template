@@ -60,7 +60,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::centerWindow()
 {
-    const auto screenGeometry = QApplication::primaryScreen()->geometry();
+    auto *screen = QApplication::primaryScreen();
+    if (screen == nullptr) {
+        screen = this->screen();
+    }
+    if (screen == nullptr) {
+        return;
+    }
+    const auto screenGeometry = screen->geometry();
     const auto x = (screenGeometry.width() - this->width()) / 2;
     const auto y = (screenGeometry.height() - this->height()) / 2;
     this->move(x, y);
