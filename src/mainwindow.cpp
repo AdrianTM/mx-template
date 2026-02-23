@@ -21,8 +21,9 @@
  **********************************************************************/
 
 #include "mainwindow.h"
-#include "qapplication.h"
 #include "ui_mainwindow.h"
+
+#include <QApplication>
 
 #include <QDebug>
 #include <QFileDialog>
@@ -92,10 +93,7 @@ void MainWindow::setConnections()
     proc.disconnect();
     connect(&proc, &QProcess::readyReadStandardOutput, this, &MainWindow::updateOutput);
     connect(&proc, &QProcess::started, this, &MainWindow::cmdStart);
-    connect(&proc,
-            QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-            this,
-            [this](int, QProcess::ExitStatus) { cmdDone(); });
+    connect(&proc, &QProcess::finished, this, [this](int, QProcess::ExitStatus) { cmdDone(); });
 }
 
 void MainWindow::setGeneralConnections()
@@ -109,7 +107,7 @@ void MainWindow::setGeneralConnections()
 
 void MainWindow::updateOutput()
 {
-    const QString out = proc.readAll();
+    const QString out = proc.readAllStandardOutput();
     qDebug() << out;
     ui->outputBox->moveCursor(QTextCursor::End);
     ui->outputBox->insertPlainText(out);
@@ -162,8 +160,8 @@ void MainWindow::pushAboutClicked()
     this->hide();
     displayAboutMsgBox(
         tr("About %1").arg(programName),
-        R"(<p align="center"><b><h2>)" + programName
-            + R"(</h2></b></p><p align="center">)" + tr("Version: ") + QApplication::applicationVersion()
+        R"(<p align="center"><h2><b>)" + programName
+            + R"(</b></h2></p><p align="center">)" + tr("Version: ") + QApplication::applicationVersion()
             + "</p><p align=\"center\"><h3>" + tr("Description goes here")
             + R"(</h3></p><p align="center"><a href="http://mxlinux.org">http://mxlinux.org</a><br /></p><p align="center">)"
             + tr("Copyright (c) MX Linux") + "<br /><br /></p>",

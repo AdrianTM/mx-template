@@ -91,7 +91,7 @@ void displayAboutMsgBox(const QString &title, const QString &message, const QStr
         text->setReadOnly(true);
         QProcess proc;
         proc.start(
-            "zless",
+            QStringLiteral("zcat"),
             {"/usr/share/doc/" + QFileInfo(QCoreApplication::applicationFilePath()).fileName() + "/changelog.gz"},
             QIODevice::ReadOnly);
         proc.waitForFinished(5000);

@@ -37,10 +37,6 @@ class MainWindow : public QDialog
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
-    void centerWindow();
-    void setup();
-
-public slots:
 
 private slots:
     void cmdDone();
@@ -55,6 +51,9 @@ private slots:
     void updateOutput();
 
 private:
+    void centerWindow();
+    void setup();
+
     Ui::MainWindow *ui;
     QProcess proc;
     QSettings settings;

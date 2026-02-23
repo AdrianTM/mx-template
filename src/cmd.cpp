@@ -58,10 +58,7 @@ bool Cmd::run(const QString &cmd, QString *output, bool quiet)
         qDebug().noquote() << cmd;
     }
     QEventLoop loop;
-    connect(this,
-            QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-            this,
-            [this](int, QProcess::ExitStatus) { emit done(); },
+    connect(this, &QProcess::finished, this, [this](int, QProcess::ExitStatus) { emit done(); },
             Qt::UniqueConnection);
     connect(this, &Cmd::done, &loop, &QEventLoop::quit, Qt::UniqueConnection);
     start(QStringLiteral("/bin/bash"), {QStringLiteral("-c"), cmd});
