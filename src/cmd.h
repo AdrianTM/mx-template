@@ -31,8 +31,7 @@ class Cmd : public QProcess
 
 public:
     explicit Cmd(QObject *parent = nullptr);
-    bool run(const QString &cmd, bool quiet = false, int timeoutMs = -1);
-    bool run(const QString &cmd, QString *output, bool quiet = false, int timeoutMs = -1);
+    bool run(const QString &cmd, QString *output = nullptr, bool quiet = false, int timeoutMs = -1);
     [[nodiscard]] QString getCmdOut(const QString &cmd, bool quiet = false, int timeoutMs = -1);
 
 signals:

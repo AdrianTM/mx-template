@@ -36,12 +36,6 @@ Cmd::Cmd(QObject *parent)
     connect(this, &QProcess::finished, this, [this](int, QProcess::ExitStatus) { emit done(); });
 }
 
-bool Cmd::run(const QString &cmd, bool quiet, int timeoutMs)
-{
-    QString output;
-    return run(cmd, &output, quiet, timeoutMs);
-}
-
 QString Cmd::getCmdOut(const QString &cmd, bool quiet, int timeoutMs)
 {
     QString output;
@@ -88,6 +82,7 @@ bool Cmd::run(const QString &cmd, QString *output, bool quiet, int timeoutMs)
             waitForFinished(1000);
         }
     }
-    *output = outBuffer.trimmed();
+    if (output)
+        *output = outBuffer.trimmed();
     return !timedOut && (exitStatus() == QProcess::NormalExit && exitCode() == 0);
 }

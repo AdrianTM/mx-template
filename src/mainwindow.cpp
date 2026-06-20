@@ -97,12 +97,7 @@ void MainWindow::setConnections()
     connect(&cmd, &Cmd::outputAvailable, this, &MainWindow::updateOutput, Qt::UniqueConnection);
     connect(&cmd, &Cmd::errorAvailable, this, &MainWindow::updateOutput, Qt::UniqueConnection);
     connect(&cmd, &QProcess::started, this, &MainWindow::cmdStart, Qt::UniqueConnection);
-    connect(&cmd, &QProcess::finished, this, &MainWindow::cmdFinished, Qt::UniqueConnection);
-}
-
-void MainWindow::cmdFinished(int, QProcess::ExitStatus)
-{
-    cmdDone();
+    connect(&cmd, &QProcess::finished, this, &MainWindow::cmdDone, Qt::UniqueConnection);
 }
 
 void MainWindow::setGeneralConnections()
