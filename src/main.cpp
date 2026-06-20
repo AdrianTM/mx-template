@@ -54,9 +54,6 @@ int main(int argc, char *argv[])
     }
 
     QApplication app(argc, argv);
-    if (getuid() == 0) {
-        qputenv("HOME", "/root");
-    }
     QApplication::setOrganizationName("MX-Linux");
     QApplication::setApplicationVersion(VERSION);
     QApplication::setWindowIcon(QIcon::fromTheme(QApplication::applicationName()));
@@ -89,6 +86,11 @@ int main(int argc, char *argv[])
                     "You seem to be logged in as root, please log out and log in as normal user to use this program."));
             return EXIT_FAILURE;
         }
+    }
+
+    // Root env setup — set HOME when running as root (already checked loginuid guard)
+    if (getuid() == 0) {
+        qputenv("HOME", "/root");
     }
     qDebug().noquote() << QApplication::applicationName() << QObject::tr("version:")
                        << QApplication::applicationVersion();
