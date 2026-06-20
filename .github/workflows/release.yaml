@@ -16,9 +16,10 @@ jobs:
       - name: Get Latest Changelog Entry
         id: get-changelog
         run: |
-          changelog=$(awk '
+          repo="${{ github.event.repository.name }}"
+          changelog=$(awk -v repo="$repo" '
               BEGIN { changes = ""; release_found = 0; in_changes = 0 }
-              /^'${{ github.event.repository.name }}'/ {
+              index($0, repo) == 1 {
                   if (release_found == 1) exit
                   release_found = 1
                   next

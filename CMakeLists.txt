@@ -119,7 +119,6 @@ target_link_libraries(CUSTOMPROGRAMNAME
 
 # Set compiler flags
 target_compile_options(CUSTOMPROGRAMNAME PRIVATE
-    -Wpedantic
     -pedantic
     -Werror=return-type
     -Werror=switch

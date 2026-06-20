@@ -38,4 +38,28 @@ Makefile*
 # Transifex ignore
 .tx/
 
+# Build artifacts
+*_autogen/
+build/
+.cache/
+.cmake/
+.qtc_clangd/
+CMakeCache.txt
+CMakeFiles/
+build.ninja
+.ninja_deps
+.ninja_log
+cmake_install.cmake
+*.user
+
+# IDE and tool caches
+.claude/
+.codex/
+.vscode/
+
+# Generated files
+src/ui_*.h
+src/qrc_*.cpp
+*.qm
+
 CUSTOMPROGRAMNAME
