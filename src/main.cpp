@@ -37,9 +37,6 @@
     #define VERSION "?.?.?.?"
 #endif
 
-// Capture original HOME before any modifications
-const QString startingHome = qEnvironmentVariable("HOME");
-
 int main(int argc, char *argv[])
 {
     if (getuid() == 0) {
